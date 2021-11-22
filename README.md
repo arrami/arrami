@@ -49,6 +49,7 @@
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637269644/icons/MongoDB-Icon-logo_mndusj.svg" alt="MySQL" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637273349/icons/postman_ruhbrc.png" alt="Postman" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637257666/icons/laravel_sqntln.png" alt="Laravel" width="50" height="50">
+<img src="https://res.cloudinary.com/citywizz/image/upload/v1637574848/icons/Python-logo-notext_rsw7jx.svg" alt="Python" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637268897/icons/Django_logo_lx8cbc.png" alt="Django" width="50" height="50">
 </div>
 
