@@ -72,14 +72,14 @@
 </div>
 
 
-## Formations en présentiel ou visio.
+## Formations en présentiel ou visio
 [Stephane-arrami.com](https://stephane-arrami.com)
 
 
 ## Lexique du numérique
 [Définitions Digital](https://definitions-digital.com)
 
-## Création de sites Web, applications : 
+## Création de sites Web et applications
 [Citywizz.com](https://citywizz.com)
 
 
