@@ -1,6 +1,6 @@
-## Bonjour à vous ! 👋
+# Bonjour à vous ! 👋
 
-###  Exercices UX - Webdesign intégration
+##  Exercices UX - Webdesign intégration
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637245930/icons/Figma-logo_ttqnno.svg" alt="Figma" width="50" height="50">
@@ -13,7 +13,7 @@
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637244240/icons/gsap_nqdndw.png" alt="GSAP" width="50" height="50" style="vertical-align: top;">
 </div>
 
-###  Exercices communication digitale - webmarketing
+##  Exercices communication digitale - webmarketing
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637253961/icons/affinity-designer_en38mb.png" alt="Affinity Designer" width="50" height="50">
@@ -27,7 +27,7 @@
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637273093/icons/movavi_egw5rs.png" alt="Google Analytics" width="50" height="50">
 </div>
 
-###  Exercices développement web front-end
+##  Exercices développement web front-end
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637256354/icons/es6_anikll.png" alt="ESNext" width="50" height="50">
@@ -40,7 +40,7 @@
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637246418/icons/Angular_full_color_logo.svg_cojwau.png" alt="Angular Framework" width="50" height="50">
  </div>
 
-###  Exercices développement web back-end
+##  Exercices développement web back-end
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637254218/icons/linux.svg_rdwnhb.png" alt="Linux" width="50" height="50">
@@ -54,14 +54,14 @@
 </div>
 
 
-###  Exercices développement web mobile
+##  Exercices développement web mobile
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637267721/icons/dart_fwlwba.jpg" alt="Dart" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637257769/icons/flutter_logo_ikswxy.svg" alt="Flutter" width="50" height="50">
 </div>
 
-###  Exercices gestion de projet application web - LowCode
+##  Exercices gestion de projet application web - LowCode
 
 <div align="center">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637267481/icons/Git_icon.svg_kruygj.png" alt="Git" width="50" height="50">
@@ -71,9 +71,16 @@
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1637273897/icons/netifly_clqmxd.svg" alt="Buddy" width="50" height="50">
 </div>
 
-* Formation en présentiel ou visio.
 
-* Consulting SEO architecture de contenus, helpdesk et maintenance de sites applications : [citywizz.com](https://citywizz.com).
+## Formations en présentiel ou visio.
+[Stephane-arrami.com](https://stephane-arrami.com)
+
+
+## Lexique du numérique
+[Définitions Digital](https://definitions-digital.com)
+
+## Création de sites Web, applications : 
+[Citywizz.com](https://citywizz.com)
 
 
 
