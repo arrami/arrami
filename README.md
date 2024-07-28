@@ -2,6 +2,8 @@
 
 Vous trouverez ici quelques mini-projets et supports d'exercices de mes formations web.
 
+Il est essentiel qu'un formateur présente des preuves concrètes de projets réalisés, afin de démontrer son expertise et d'inspirer confiance aux apprenants dans leur parcours de formation.
+
 ##  Exercices UX - Webdesign intégration
 
 <div align="center">
