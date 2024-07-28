@@ -103,8 +103,10 @@ Il est essentiel qu'un formateur présente des preuves concrètes de projets ré
 ## Lexiques des métiers du numérique
 [Définitions Digital](https://definitions-digital.com)
 
-## Création de sites Web et applications desktop et mobiles // Citywizz SEO local, dev web WordPress et dataviz
+## Création de sites Web et applications desktop et mobiles
 [Citywizz.com](https://citywizz.com)
+Citywizz SEO dev web WordPress et dataviz
+[@citywizz](https://citywizz.com](https://github.com/citywizz)
 
 
 
