@@ -61,7 +61,6 @@ Il est essentiel qu'un formateur présente des preuves concrètes de projets ré
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722157557/logos/next-js_vziysy.svg" alt="NextJS" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162660/logos/Node.js_logo_uy9hpz.svg" alt="NodeJS" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722163389/logos/js_webpack-icon_tjie7z.svg" alt="Webpack" width="50" height="50">
-<img src="https://res.cloudinary.com/citywizz/image/upload/v1722162868/logos/typescript_bmuwyp.svg" alt="TypeScript" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722163213/logos/angular_q1abvj.svg" alt="Angular Framework" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162769/logos/Git_icon_af6oes.svg" alt="Git" width="50" height="50">
 </div>
