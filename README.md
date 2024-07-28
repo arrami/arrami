@@ -73,7 +73,7 @@ Il est essentiel qu'un formateur présente des preuves concrètes de projets ré
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162336/logos/PHP-logo_cjbeyt.svg" alt="PHP" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162472/logos/MySQL_fpt2nw.svg" alt="MySQL" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162237/logos/symfony_p2kkw8.svg" alt="Symfony" width="50" height="50">
-<img src="https://res.cloudinary.com/citywizz/image/upload/v1637574848/logos/icons/Python-logo-notext_rsw7jx.svg" alt="Python" width="50" height="50">
+<img src="https://res.cloudinary.com/citywizz/image/upload/v1637574848/logos/Python-logo-notext_rsw7jx.svg" alt="Python" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722162547/logos/django-logo-positive_jzzvld.svg" alt="Django" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722165849/logos/buddy-seeklogo_jwszgq.svg" alt="Buddy" width="50" height="50">
 <img src="https://res.cloudinary.com/citywizz/image/upload/v1722164964/logos/docker-mark-blue_e35v0m.svg" alt="Docker" width="50" height="50">
