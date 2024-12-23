@@ -98,19 +98,33 @@ Il est essentiel qu'un formateur présente des preuves concrètes de projets ré
 
 
 ## Formations en présentiel ou visio
+
 [Stephane-arrami.com](https://stephane-arrami.com)
 
+## Plateformes d'apprentissage
+
+Wanimi.com Plateforme d'apprentissage IT
+[Wanimi.com](https://wanimi.com)
+Tasdawit.com  Université des peuples natifs
+[Tasdawit.com](https://tasdawit.com)
+
 ## Lexiques des métiers du numérique
+
 [Définitions Digital](https://definitions-digital.com)
 
 ## Création de sites Web et applications desktop et mobiles
+
 [Citywizz.com](https://citywizz.com)
 Citywizz SEO dev web WordPress et dataviz
 [@citywizz](https://github.com/citywizz)
 
-Sites du domaine amazigh (berbère) depuis 1997
+## Sites du domaine amazigh (berbère) depuis 1997
+
 [Kabyle.com](https://kabyle.com)
+1er site d'information kabyle
+
 [Amazigh 24](https://amazigh24.com)
+Guide des cultures amazighes et actualités
 
 
 
