@@ -108,5 +108,10 @@ Il est essentiel qu'un formateur présente des preuves concrètes de projets ré
 Citywizz SEO dev web WordPress et dataviz
 [@citywizz](https://github.com/citywizz)
 
+Sites du domaine amazigh (berbère) depuis 1997
+[Kabyle.com](https://kabyle.com)
+[Amazigh 24](https://amazigh24.com)
+
+
 
 
