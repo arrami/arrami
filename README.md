@@ -98,7 +98,12 @@ Historical Amazigh media (since 1997) · Culture, memory, history.
 
 ### 🌍 **Amazigh24.com**  
 Amazigh culture guide · Documentation · News.  
-🔗 https://amazigh24.com
+🔗 https://amazigh24.com  
+
+- **Tifin dictionary** — digital lexicon & resources  
+  🔗 https://dictionnaire.amazigh24.com  
+- **Amazigh given names** — onomastics & cultural meanings  
+  🔗 https://prenoms.amazigh24.com
 
 ### 📚 **Dictionnaire-numerique.fr**  
 Atlas of francophone lexicons & digital dictionaries.  
