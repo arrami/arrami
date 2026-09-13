@@ -25,11 +25,11 @@ Je conçois des écosystèmes numériques reliant ingénierie web, mémoire cult
 
 | Domaine | Technologies / Outils clés |
 | :---- | :---- |
-| **WordPress & Web** | WordPress FSE, ACF/Metabox, WPGraphQL, REST API, Astro, Next.js |
-| **Développement** | JS (ES6/TS), React, Angular, PHP, Python, MySQL, Docker, Linux, Git |
-| **Data, SEO & Analytics** | Technical SEO, JSON-LD, Matomo, Looker Studio, Power BI, D3.js |
-| **Doc & Archivage** | Omeka S, Dublin Core, Elasticsearch, n8n, Zotero, Notion / Airtable |
-| **Design & Motion** | Figma, Affinity, GSAP, SVG, Lottie, After Effects, Premiere |
+| **WordPress & Web** | WordPress FSE, ACF/Metabox, WPGraphQL, REST API, Astro |
+| **Développement** | PHP, JS (ES6/TS), React, Python, Docker/DDEV, Git, Sécurité applicative, audits RGAA WCAG |
+| **Data, SEO & Analytics** | SEO technique, Core Web Vitals, JSON-LD, tracking IA (Matomo), veille GEO/AEO |
+| **Doc & Archivage** | Omeka S, Dublin Core, n8n, Zotero |
+| **Design** | Figma, SVG, GSAP |
 
 ---
 
