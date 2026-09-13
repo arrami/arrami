@@ -8,9 +8,9 @@ Je conçois des écosystèmes numériques reliant ingénierie web, mémoire cult
 
 ## 🎯 Réalisations récentes
 
-* **Temoust** — Architecture d'un site média, développement de plugins WordPress sur mesure (partage social avancé, galerie)  
+* **Temoust** - Architecture d'un site média, développement de plugins WordPress sur mesure (partage social avancé, galerie)  
 * **Saint-Pothin Immaculée Conception** — Infogérance, formation des utilisateurs et corrections applicatives
-* **Universel PC** — Optimisations SEO crawl et corrections techniques]  
+* **Universel PC** — Optimisations SEO crawl et corrections techniques  
 
 **En cours**
 
@@ -51,28 +51,28 @@ Je conçois des écosystèmes numériques reliant ingénierie web, mémoire cult
 
 **Pédagogie & Studio**
 
-* [Wanimi](https://wanimi.com) — \[ton rôle : fondateur/dev/formateur \+ 1 ligne sur ce que c'est\]  
-* [Formateur Web](https://stephane-arrami.com) — \[1 ligne\]  
-* [Citywizz](https://citywizz.com) — \[1 ligne\]
+* [Wanimi](https://wanimi.com) 
+* [Formateur Web](https://stephane-arrami.com) 
+* [Citywizz](https://citywizz.com)
 
 **Recherche & Archives**
 
-* [Tasdawit](https://tasdawit.com) — \[1 ligne\]  
-* [Omeka Studio](https://citywizz.com) — \[1 ligne\]
+* [Tasdawit](https://tasdawit.com)
+* [Omeka Studio](https://citywizz.com)
 
 **Mémoire & Médias**
 
-* [Kabyle.com (1997–)](https://kabyle.com) — \[1 ligne : portée, ex. "portail culturel, X visiteurs/mois depuis 1997"\]  
-* [Amazigh24](https://amazigh24.com) — \[1 ligne\]  
-* [Tunisie-Amazigh](https://tunisie-amazigh.com) — \[1 ligne\]
+* [Lyon Infô](https://lyoninfo.fr)
+* [Kabyle.com (1997–)](https://kabyle.com)  
+* [Amazigh24](https://amazigh24.com)
+* [Tunisie-Amazigh](https://tunisie-amazigh.com)
 
 **Atlas & Glossaires**
 
-* [Dictionnaire Numérique](https://dictionnaire-numerique.fr) — \[1 ligne\]  
-* [Definitions Digital](https://definitions-digital.com) — \[1 ligne\]  
-* [Madacity](https://madacity.com) — \[1 ligne\]  
-* [Lyon Infô](https://lyoninfo.fr) — \[1 ligne\]  
-* [Visitarpitania](https://visitarpitania.com) — \[1 ligne\]
+* [Dictionnaire Numérique](https://dictionnaire-numerique.fr) 
+* [Definitions Digital](https://definitions-digital.com)  
+* [Madacity](https://madacity.com) 
+* [Visitarpitania](https://visitarpitania.com)
 
 ---
 
