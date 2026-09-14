@@ -1,0 +1,15 @@
+{
+  "max_allowed_depth": 1,
+  "pillars": [
+    {
+      "name": "Blog",
+      "patterns": ["/blog"],
+      "max_depth_target": 1
+    },
+    {
+      "name": "Services",
+      "patterns": ["/services"],
+      "max_depth_target": 1
+    }
+  ]
+}

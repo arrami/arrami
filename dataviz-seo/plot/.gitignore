@@ -1,0 +1,7 @@
+output/
+data/private/
+config/pillars.json           # Optionnel si tu veux isoler 100% la prod
+__pycache__/
+*.pyc
+.DS_Store
+*.tmp
