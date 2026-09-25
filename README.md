@@ -22,23 +22,23 @@
 ## 📂 Mes Dépôts Phares
 
 ### 🚀 Projets Récents & Professionnels
-- 🏛️ [**Architectures Web & IA**](./architectures-web-ia/) : Blueprints, cas pratiques et méthodologie (RAG, Headless, NoCode, FSE).
-- ⚛️ [**React Boilerplate Pro**](./react-boilerplate-pro/) : Template React TypeScript prêt à l'emploi.
-- 🎨 [**Europeana References App**](./europenana-references-app/) : Application React de recherche de références visuelles (API Europeana).
-- 📊 [**DataGouv App**](./datagouv-app/) : Exploration et visualisation de données ouvertes (data.gouv.fr).
-- 📄 [**CV Professionnel**](./cv-stephane-arrami/) : CV en ligne axé sur le développement, la culture numérique et le design de l'information.
+- 🏛️ [**Architectures Web & IA**](https://github.com/arrami/architectures-web-ia/) : Blueprints, cas pratiques et méthodologie (RAG, Headless, NoCode, FSE).
+- ⚛️ [**React Boilerplate Pro**](https://github.com/arrami/react-boilerplate-pro/) : Template React TypeScript prêt à l'emploi.
+- 🎨 [**Europeana References App**](https://github.com/arrami/europenana-references-app/) : Application React de recherche de références visuelles (API Europeana).
+- 📊 [**DataGouv App**](https://github.com/arrami/datagouv-app/) : Exploration et visualisation de données ouvertes (data.gouv.fr).
+- 📄 [**CV Professionnel**](https://github.com/arrami/cv-stephane-arrami/) : CV en ligne axé sur le développement, la culture numérique et le design de l'information.
 
 ### 🛠️ Outils & Ressources Techniques
-- 🐳 [**Docker WordPress**](./dockerwordpress/) : Environnement local WordPress conteneurisé.
-- 📦 [**Webpack Multipage**](./webpack-multipage/) : Configuration Webpack optimisée pour sites multi-pages.
-- 🎨 [**Sass Exo 01**](./sass-exo-01/) : Exercices et bonnes pratiques des préprocesseurs CSS.
-- ⌨️ [**WebDev Shortcuts**](./WebDev-Shortcuts/) : Aide-mémoire des raccourcis pour le développement web.
+- 🐳 [**Docker WordPress**](https://github.com/arrami/dockerwordpress/) : Environnement local WordPress conteneurisé.
+- 📦 [**Webpack Multipage**](https://github.com/arrami/webpack-multipage/) : Configuration Webpack optimisée pour sites multi-pages.
+- 🎨 [**Sass Exo 01**](https://github.com/arrami/sass-exo-01/) : Exercices et bonnes pratiques des préprocesseurs CSS.
+- ⌨️ [**WebDev Shortcuts**](https://github.com/arrami/WebDev-Shortcuts/) : Aide-mémoire des raccourcis pour le développement web.
 
 ### 🎓 Formation & Mentorat
-- 🎯 [**OC TheArtBox**](./oc-theartbox/) : Supports et aide-mémoire pour le mentorat OpenClassrooms.
+- 🎯 [**OC TheArtBox**](https://github.com/arrami/oc-theartbox/) : Supports et aide-mémoire pour le mentorat OpenClassrooms.
 
 ### 🎨 Projets Artistiques & Expérimentaux
-- 🖼️ [**Keith Haring**](./keith-haring/) : Projet artistique et expérimentation web interactive.
+- 🖼️ [**Keith Haring**](https://github.com/arrami/keith-haring/) : Projet artistique et expérimentation web interactive.
 
 ---
 
