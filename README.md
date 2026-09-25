@@ -15,6 +15,8 @@
 - 🤖 **Intégration IA** : RAG, UX agentique, automatisation de flux (n8n, Make).
 - 🎓 **Formation** : Mentor OpenClassrooms, jury de certification, accompagnement d'équipes techniques.
 
+> 💡 **Positionnement** : Au-delà du développement logiciel pur (devenu une commodité), ce référentiel se concentre sur la conception d'écosystèmes durables : architecture informatique, résolution de problèmes complexes et maîtrise stratégique du numérique.
+
 ---
 
 ## 📂 Mes Dépôts Phares
@@ -40,13 +42,24 @@
 
 ---
 
-## 🌐 Mon Studio & Mes Initiatives
+## 🌐 Mon Studio, Mes Sites & Mes Initiatives
 
-- 🏢 **Citywizz** : Mon studio d'architecture web ([citywizz.com](https://citywizz.com)). Écosystème applicatif et guide local intelligent dédié à la valorisation du territoire lyonnais.
-- 🎓 **Wanimi** : Formation web et accompagnement technique pour les professionnels du numérique.
-- 📚 **Tasdawit** : Bibliothèque humaine des mémoires partagées, archive communautaire via Omeka S.
-- 📰 **Kabyle.com** : Média communautaire historique (depuis 1999), gestion de l'archivage et de l'audience.
-- 🗺️ **Madacity** : Guide culturel et encyclopédie visuelle de Madagascar (projet en cours).
+### 🏢 Studio & Formation
+- **Citywizz** : Mon studio d'architecture web ([citywizz.com](https://citywizz.com)). Écosystème applicatif et guide local intelligent dédié à la valorisation du territoire lyonnais.
+- **Wanimi** : Formation web et accompagnement technique pour les professionnels du numérique.
+
+### 📚 Sites de Connaissance & Lexiques
+- **Définitions Digital** : Lexique structuré des métiers et cadres méthodologiques du numérique ([definitions-digital.com](https://definitions-digital.com/)).
+- **Dictionnaire Numérique** : Un nouveau mot chaque jour sur les technologies et usages du web ([dictionnaire-numerique.fr](https://dictionnaire-numerique.fr/)).
+
+### 🎨 Expérimentations Techniques
+- **CodePen** : Expérimentations front-end, snippets CSS/JS et démos interactives ([codepen.io/citywizz](https://codepen.io/citywizz)).
+
+### 🏛️ Patrimoine & Médias
+- **Tasdawit** : Bibliothèque humaine des mémoires partagées, archive communautaire via Omeka S.
+- **Kabyle.com** : Média communautaire historique (depuis 1999), gestion de l'archivage et de l'audience.
+- **LyonInfo.fr** : Média des diversités culturelles et annuaire lyonnais.
+- **Madacity** : Guide culturel et encyclopédie visuelle de Madagascar (projet en cours).
 
 ---
 
@@ -57,7 +70,7 @@
 | **Frontend** | React, Next.js, Astro, WordPress FSE, Tailwind CSS, TypeScript |
 | **Backend / Data** | PHP, Node.js, PostgreSQL, MariaDB, Omeka S, REST API / GraphQL |
 | **Outils & DevOps** | Git, GitHub Actions, Docker, n8n, Figma, Mermaid.js |
-| **Qualité** | Axe-core, Lighthouse, Playwright, RankMath, Plausible Analytics |
+| **Qualité** | Axe-core, Lighthouse, Playwright, RankMath, Matomo, Plausible Analytics |
 
 ---
 

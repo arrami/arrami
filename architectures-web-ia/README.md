@@ -64,36 +64,36 @@ Chaque fiche détaille les briques logiques, les choix techniques, les flux de d
 
 ### 🤖 IA & Expérience Utilisateur
 *Comment intégrer l'IA de manière utile, éthique et performante.*
-- 📄 [**UX Agentique & Chat-First**](./architectures-web-ia/agentic-ux-chat-first.md) : Remplacer la navigation par l'intention. Stack LLM, Tool Calling et RAG.
-- 📄 [**RAG pour Service Client**](./architectures-web-ia/architecture-rag-service-client.md) : Assistant virtuel fiable, sourcé et conforme RGPD/HDS.
+- 📄 [**UX Agentique & Chat-First**](agentic-ux-chat-first.md) : Remplacer la navigation par l'intention. Stack LLM, Tool Calling et RAG.
+- 📄 [**RAG pour Service Client**](architecture-rag-service-client.md) : Assistant virtuel fiable, sourcé et conforme RGPD/HDS.
 
 ### 🛒 E-commerce, Catalogues & Sites Vitrines
 *Performance, SEO local et gestion de contenu éditorial.*
-- 📄 [**Catalogue Auto Headless**](./architectures-web-ia/architecture-site-vitrine-catalogue-auto-headless.md) : Astro + Pages CMS. Zéro maintenance, 100% statique.
-- 📄 [**Gestion de Menus de Restauration**](./architectures-web-ia/architecture-application-full-stack-gestion-de-menus-restauration.md) : Next.js Full-stack, accessibilité et souveraineté des données.
-- 📄 [**Catalogue Interactif Data-Driven**](./architectures-web-ia/architecture-catalogue-interactif-data-driven.md) : Moteur React/Vite réutilisable piloté par manifeste JSON (Flipbook/Swiper).
+- 📄 [**Catalogue Auto Headless**](architecture-site-vitrine-catalogue-auto-headless.md) : Astro + Pages CMS. Zéro maintenance, 100% statique.
+- 📄 [**Gestion de Menus de Restauration**](architecture-application-full-stack-gestion-de-menus-restauration.md) : Next.js Full-stack, accessibilité et souveraineté des données.
+- 📄 [**Catalogue Interactif Data-Driven**](architecture-catalogue-interactif-data-driven.md) : Moteur React/Vite réutilisable piloté par manifeste JSON (Flipbook/Swiper).
 
 ### 🏛️ Patrimoine, Archives & Structuration de Données
 *Préservation de la mémoire, interopérabilité et données complexes.*
-- 📄 [**Écosystème Patrimonial (WP + Omeka S + Zotero)**](./architectures-web-ia/architecture-ecosysteme-patrimonial-wp-omeka-zotero.md) : Le meilleur des deux mondes : narration grand public et rigueur archivistique.
-- 📄 [**Plateforme de Mémoire Orale (Tasdawit)**](./architectures-web-ia/architecture-plateforme-tasdawit-omeka-scripto.md) : Collecte, transcription communautaire (Scripto/Whisper) et conservation HDS.
+- 📄 [**Écosystème Patrimonial (WP + Omeka S + Zotero)**](architecture-ecosysteme-patrimonial-wp-omeka-zotero.md) : Le meilleur des deux mondes : narration grand public et rigueur archivistique.
+- 📄 [**Plateforme de Mémoire Orale (Tasdawit)**](architecture-plateforme-tasdawit-omeka-scripto.md) : Collecte, transcription communautaire (Scripto/Whisper) et conservation HDS.
 
 ### 📱 No-Code, Low-Code & Prototypage
 *Solutions rapides pour valider un marché ou un besoin pédagogique.*
-- 📄 [**Application de Suivi Éducatif**](./architectures-web-ia/architecture-nocode-adalo-figma-app-suivi-educatif.md) : Adalo + Figma. Prototypage rapide avec Design System et flux de données clairs.
+- 📄 [**Application de Suivi Éducatif**](architecture-nocode-adalo-figma-app-suivi-educatif.md) : Adalo + Figma. Prototypage rapide avec Design System et flux de données clairs.
 
 ### ⚙️ Socle Technique & Multi-Sites
 *Industrialisation et maintenance à l'échelle.*
-- 📄 [**Agenda Multi-Sites (Code Commun)**](./architectures-web-ia/architecture-agenda-code-commun-unifie.md) : Un seul plugin Meta Box/Mu-plugin déployé sur plusieurs sites WordPress indépendants.
+- 📄 [**Agenda Multi-Sites (Code Commun)**](architecture-agenda-code-commun-unifie.md) : Un seul plugin Meta Box/Mu-plugin déployé sur plusieurs sites WordPress indépendants.
 
 ---
 
 ## 🛠️ Méthodologie & Standards de Qualité
 
-La technique ne vaut rien sans rigueur. Le dossier [`methodologie/`](./methodologie/) contient les grilles de lecture et les guides utilisés pour construire ces architectures :
+La technique ne vaut rien sans rigueur. Le dossier [`methodologie/`](methodologie/) contient les grilles de lecture et les guides utilisés pour construire ces architectures :
 
-- 📐 [**Guide de rédaction de diagrammes Mermaid**](./methodologie/guide-mermaid.md) : Comment créer des schémas clairs, maintenables et accessibles.
-- ♿ [**Checklist d'Accessibilité (RGAA / WCAG)**](./methodologie/checklist-accessibilite.md) : Les points de contrôle non-négociables avant toute mise en production.
+- 📐 [**Guide de rédaction de diagrammes Mermaid**](methodologie/guide-mermaid.md) : Comment créer des schémas clairs, maintenables et accessibles.
+- ♿ [**Checklist d'Accessibilité (RGAA / WCAG)**](methodologie/checklist-accessibilite.md) : Les points de contrôle non-négociables avant toute mise en production.
 
 ---
 
@@ -114,6 +114,6 @@ Ce référentiel est conçu pour être une **source unique de vérité** (Single
 **Stéphane Arrami**
 *Architecte de l'Information · Expert Accessibilité (RGAA/WCAG) · Formateur*
 📍 Lyon, France (Disponible en remote ou sur site)
-🌐 [Portfolio](https://votre-site.com) · [💼 LinkedIn](https://linkedin.com/in/votre-profil)
+🌐 [Portfolio](https://stephane-arrami.com) · [💼 LinkedIn](https://www.linkedin.com/in/stephane-arrami/)
 
 > *Ce dépôt est sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Vous êtes libre de partager et d'adapter ce contenu, à condition d'en créditer l'auteur et de partager vos modifications dans les mêmes conditions.*
