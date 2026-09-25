@@ -1,70 +1,59 @@
 # 👋 Stéphane Arrami
 
-**Architecte Web · Architecte de l'Information · SEO/UX Technique · Formateur**  
+**Architecte Web · Architecte de l'Information · SEO/UX Technique · Formateur**
 📍 Basé à **Lyon** (Disponible pour des missions en local, hybride ou remote)
+🌐 [Portfolio](https://stephane-arrami.com) · [💼 LinkedIn](https://www.linkedin.com/in/stephane-arrami/) · [📍 Citywizz](https://citywizz.com)
 
-Je conçois des écosystèmes numériques performants, éthiques et accessibles, reliant ingénierie web, mémoire culturelle et pédagogie active auprès des entreprises, institutions et agences de la région lyonnaise.
-
----
-
-### 🎯 Réalisations récentes
-
-*   **Temoust** — Architecture d'un site média, développement de plugins WordPress sur mesure (partage social avancé, galerie).
-*   **Saint-Pothin Immaculée Conception (Lyon)** — Infogérance, formation des utilisateurs et corrections applicatives.
-*   **Universel PC** — Optimisations SEO crawl et corrections techniques.
-
-**🏗️ En cours :**
-*   **Saint-Pothin Immaculée Conception** — Migration vers Divi 5.
-*   **Temoust** — Design system.
-*   **Universel PC** — Refonte complète.
+> Je conçois des écosystèmes numériques **performants, éthiques et accessibles**, reliant ingénierie web, mémoire culturelle et pédagogie active. Mon approche privilégie la structuration sémantique, la souveraineté des données et l'accessibilité universelle (RGAA/WCAG).
 
 ---
 
-### 🛠️ Domaines & Stack Technique
+## 🛠️ Domaines d'Expertise & Stack Technique
 
-| Domaine | Technologies / Outils clés |
+| Domaine | Technologies & Méthodologies Clés |
 | :--- | :--- |
-| **WordPress & Web** | WordPress FSE, Bricks Builder, Oxygen, Greenshift, ACF/Metabox, WPGraphQL, REST API, Astro |
-| **Développement** | PHP, JS (ES6/TS), React, Python, Docker/DDEV, Git, Sécurité applicative, **audits RGAA/WCAG** |
-| **Data, SEO & Analytics** | SEO technique, Core Web Vitals, JSON-LD, tracking IA (Matomo), veille GEO/AEO |
-| **Doc & Archivage** | Omeka S, Dublin Core, n8n, Zotero |
-| **Design** | Figma, SVG, GSAP |
+| **🏗️ Architecture Web** | WordPress (FSE, Bricks, Oxygen), Astro, PHP, JS/TS, React, Python, Docker/DDEV, Git |
+| **🔍 SEO & Data** | SEO technique sémantique, Core Web Vitals, JSON-LD, Schema.org, Analytics souverain (Matomo) |
+| **♿ Accessibilité & Qualité** | Audits RGAA/WCAG, Design System, Tests automatisés, éco-conception numérique |
+| **📚 Archivage & Structuration** | Omeka S, Dublin Core, n8n, Zotero, Mermaid.js, Documentation as Code |
 
 ---
 
-### 📂 Ce dépôt (Pédagogie & Code)
-Exemples pédagogiques, scripts d'automatisation, snippets et prototypes issus de mes formations.
+## 🌐 Écosystèmes & Projets Phares
 
-*   📂 [`/snippets-wp`](./snippets-wp) — Hooks PHP custom, optimisations FSE & micro-data.
-*   📂 [`/automation`](./automation) — Workflows n8n, pipelines d'ingestion documentaire & Elasticsearch.
-*   📂 [`/dataviz-seo`](./dataviz-seo) — Gabarits d'analyse, JSON-LD & scripts d'audit.
+### 📰 Mémoire, Médias & Archives
+*   **Kabyle.com** *(Depuis 1999)* : 1er média nord-africain berbère kabyle. Pilier du web communautaire gérant +25 ans d'histoire et d'archivage numérique.
+*   **Tasdawit** : Bibliothèque humaine des mémoires partagées. Archive communautaire structurée via Omeka S, redonnant voix et dignité aux récits de vie.
+*   **Lyon Infô** : Média des diversités culturelles locales. Plateforme d'entraide (cartes interactives, guides audio) mettant en lumière le patrimoine vivant de la région lyonnaise.
 
----
-
-### 🌐 Plateformes & Écosystèmes
-
-#### 🎓 Pédagogie & Studio
-*   **Wanimi** : Plateforme de formation web et d'accompagnement technique pour les professionnels du numérique.
-*   **Citywizz** : Écosystème applicatif et guide local intelligent optimisé pour la valorisation du territoire lyonnais.
-
-#### 📚 Recherche, Mémoire & Archives
-*   **Tasdawit** : Bibliothèque humaine des mémoires partagées. Une archive communautaire construite via la plateforme Omeka S, où chaque vie retrouve voix et dignité.
-*   **Omeka Studio** : Hub technique spécialisé dans le déploiement d'archives institutionnelles et communautaires (Omeka S / Dublin Core).
-
-#### 📰 Mémoire & Médias (Édition, Solidarité & Trafic)
-*   **Lyon Infô** : Le média des diversités culturelles locales. Plateforme d'entraide et de solidarité (cartes interactives, guides audio, annuaire) mettant en lumière le patrimoine vivant et les acteurs de terrain, des Monts du Lyonnais au Nord-Isère.
-*   **Kabyle.com (Depuis 1999)** : 1er média nord-africain berbère kabyle. Un pilier du web communautaire gérant plus de 25 ans d'histoire (5 500 visiteurs uniques & 10 000 pages vues / mois).
-*   **Amazigh24** & **Tunisie-Amazigh** : Portails d'information internationaux optimisés pour l'accessibilité universelle et l'indexation sémantique.
-
-#### 📖 Atlas & Glossaires (Sémantique & Valorisation)
-*   **Dictionnaire Numérique** & **Definitions Digital** : Lexiques structurés actualisés avec un nouveau mot chaque jour.
-*   **Madacity** : Dictionnaire visuel dédié à Madagascar.
-*   **Visitarpitania** : Guide numérique entrant dans une démarche de valorisation du patrimoine et des territoires de l'euro-région Arpitania (aire culturelle des Alpes occidentales).
+### 🎓 Pédagogie, Outils & Territoires
+*   **Wanimi** : Plateforme de formation web et d'accompagnement technique pour les professionnels du numérique (parcours React, Next.js, UX, WordPress).
+*   **Citywizz** : Écosystème applicatif et guide local intelligent optimisé pour la valorisation et la découvrabilité du territoire lyonnais.
+*   **Dictionnaire Numérique** : Lexiques structurés et fiches définitions opérationnelles sur les métiers et cadres méthodologiques du digital.
 
 ---
 
-### 📬 Contact & Réseau
-💬 Une idée de projet, un besoin de formation ou une mission sur la région lyonnaise ? Discutons-en !
+## 🚀 Missions Récentes & En Cours
+*   **Temoust** : Architecture d'un site média et développement de plugins WordPress sur mesure (partage social avancé, galeries optimisées). *En cours : Mise en place d'un Design System.*
+*   **Saint-Pothin Immaculée Conception (Lyon)** : Infogérance, formation des utilisateurs et corrections applicatives. *En cours : Migration technique vers Divi 5.*
+*   **Universel PC** : Optimisations SEO crawl, corrections techniques et refonte complète de l'architecture d'information.
 
-[🌐 Site web](https://votre-site.com) · [💼 LinkedIn](https://linkedin.com) · [📍 Citywizz](https://citywizz.com)
+---
+
+## 📂 Sur ce GitHub : Pédagogie & Documentation
+
+Ce profil héberge des exemples pédagogiques, des scripts d'automatisation et des référentiels d'architecture issus de mes formations et de ma pratique professionnelle.
+
+*   🏛️ [`architectures-web-ia`](./architectures-web-ia) — **Nouveau** : Référentiel de fiches d'architecture technique (Agentic UX, Full-Stack, NoCode) avec diagrammes Mermaid et bonnes pratiques RGAA.
+*   💻 [`snippets-wp`](./snippets-wp) — Hooks PHP custom, optimisations FSE, micro-données et sécurité.
+*   ⚙️ [`automation`](./automation) — Workflows n8n, pipelines d'ingestion documentaire et structuration de données.
+*   📊 [`dataviz-seo`](./dataviz-seo) — Gabarits d'analyse, génération de JSON-LD et scripts d'audit technique.
+
+---
+
+## 📬 Échangeons
+
+Vous avez un projet de refonte, un besoin de structuration de connaissances ou une mission de formation sur la région lyonnaise ? Discutons de la manière dont nous pouvons rendre votre écosystème numérique plus robuste, accessible et pérenne.
+
+📧 **contact@citywizz.com**
 
