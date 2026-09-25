@@ -22,9 +22,9 @@
 ## 📂 Mes Dépôts Phares
 
 ### 🚀 Projets Récents & Professionnels
-- 🏛️ [**Architectures Web & IA**](https://github.com/arrami/architectures-web-ia/) : Blueprints, cas pratiques et méthodologie (RAG, Headless, NoCode, FSE).
+- 🏛️ [**Architectures Web & IA**](https://github.com/arrami/arrami/tree/main/architectures-web-ia/) : Blueprints, cas pratiques et méthodologie (RAG, Headless, NoCode, FSE).
 - ⚛️ [**React Boilerplate Pro**](https://github.com/arrami/react-boilerplate-pro/) : Template React TypeScript prêt à l'emploi.
-- 🎨 [**Europeana References App**](https://github.com/arrami/europenana-references-app/) : Application React de recherche de références visuelles (API Europeana).
+- 🎨 [**Europeana References App**](https://github.com/arrami/europeana-references-app/) : Application React de recherche de références visuelles (API Europeana).
 - 📊 [**DataGouv App**](https://github.com/arrami/datagouv-app/) : Exploration et visualisation de données ouvertes (data.gouv.fr).
 - 📄 [**CV Professionnel**](https://github.com/arrami/cv-stephane-arrami/) : CV en ligne axé sur le développement, la culture numérique et le design de l'information.
 
