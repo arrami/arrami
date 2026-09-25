@@ -1,0 +1,49 @@
+/**
+ * Fix : Alignement de l'icône du site dans la barre d'administration WordPress
+ *
+ * Problème : L'icône du site (Site Icon) apparaît décalée verticalement
+ * ou mal alignée par rapport au texte dans la barre d'admin (wpadminbar).
+ *
+ * Cause : Conflit de styles CSS (line-height, display, etc.) entre le thème
+ * et les styles natifs de WordPress. Ce n'est pas un bug du noyau WP ni du plugin ASE.
+ *
+ * Solution : Utilisation de Flexbox pour un centrage vertical parfait.
+ *
+ * @author  Yufitran stéphane ARRAMI MÉRABET
+ * @site    https://citywizz.com
+ * @date    2026-09-25
+ */
+
+/* 1. Conteneur principal : Flexbox pour aligner parfaitement l'icône et le texte */
+#wpadminbar #wp-admin-bar-site-name > .ab-item {
+  display: flex !important;
+  align-items: center !important;
+  height: 32px !important; /* Hauteur standard de la barre d'admin */
+  line-height: 32px !important; /* Force le texte à la même hauteur */
+  padding: 0 10px !important;
+}
+
+/* 2. L'icône elle-même */
+#wpadminbar #wp-admin-bar-site-name > .ab-item .site-icon {
+  display: inline-block !important;
+  width: 20px !important;
+  height: 20px !important;
+  margin: 0 8px 0 0 !important; /* Marge à droite uniquement */
+  padding: 0 !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: 0 !important; /* Annule tout décalage vertical */
+}
+
+/* 3. L'image à l'intérieur du conteneur <picture> */
+#wpadminbar #wp-admin-bar-site-name > .ab-item .site-icon img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important; /* Préserve les proportions de l'image */
+}
+
+/* 4. Force le texte à avoir la même hauteur que la barre */
+#wpadminbar #wp-admin-bar-site-name > .ab-item {
+  line-height: 32px !important;
+}
