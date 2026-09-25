@@ -1,119 +1,68 @@
-# 🚀 Architectures Web & IA : Blueprints & Cas Pratiques
+# 👋 Stéphane Arrami
 
-[![Licence](https://img.shields.io/badge/Licence-CC%20BY--SA%204.0-green)](https://creativecommons.org/licenses/by-sa/4.0/)
-[![Dernière mise à jour](https://img.shields.io/github/last-commit/ton-utilisateur/architectures-web-ia)](https://github.com/ton-utilisateur/architectures-web-ia)
-[![Fiches disponibles](https://img.shields.io/badge/Fiches-8-blue)](./architectures-web-ia/)
+**Architecte de l'Information · Fondateur du studio Citywizz · Formateur Web (Jurys DREETS) · Expert Accessibilité (RGAA/WCAG)**
+📍 Lyon, France · 🌐 [stephane-arrami.com](https://stephane-arrami.com) · 🏢 [Citywizz.com](https://citywizz.com) · 💼 [LinkedIn](https://linkedin.com/in/stephane-arrami)
 
-> **Un référentiel de modèles d'architecture d'applications** combinant technologies web modernes, structuration de l'information et intégration d'intelligence artificielle.
->
-> **L'objectif :** Passer rapidement d'une idée de projet ou d'un besoin métier à une vision technique claire, robuste, accessible et pérenne.
+> Je conçois des écosystèmes numériques performants, éthiques et accessibles, reliant ingénierie web, mémoire culturelle et pédagogie active.
 
 ---
 
-## 💡 Pourquoi ce dépôt ? (Problème / Solution)
+## 🎯 Domaines d'Expertise
 
-| Le Problème | La Solution apportée ici |
+- 🏗️ **Architecture Web** : WordPress (FSE, Bricks), React, Next.js, Astro, PHP, structuration de données.
+- ♿ **Accessibilité & Qualité** : Audits RGAA/WCAG, écoconception numérique, performance (Core Web Vitals).
+- 📚 **Patrimoine & Données** : Omeka S, Dublin Core, Zotero, archivage numérique et interopérabilité.
+- 🤖 **Intégration IA** : RAG, UX agentique, automatisation de flux (n8n, Make).
+- 🎓 **Formation** : Mentor OpenClassrooms, jury de certification, accompagnement d'équipes techniques.
+
+---
+
+## 📂 Mes Dépôts Phares
+
+### 🚀 Projets Récents & Professionnels
+- 🏛️ [**Architectures Web & IA**](./architectures-web-ia/) : Blueprints, cas pratiques et méthodologie (RAG, Headless, NoCode, FSE).
+- ⚛️ [**React Boilerplate Pro**](./react-boilerplate-pro/) : Template React TypeScript prêt à l'emploi.
+- 🎨 [**Europeana References App**](./europenana-references-app/) : Application React de recherche de références visuelles (API Europeana).
+- 📊 [**DataGouv App**](./datagouv-app/) : Exploration et visualisation de données ouvertes (data.gouv.fr).
+- 📄 [**CV Professionnel**](./cv-stephane-arrami/) : CV en ligne axé sur le développement, la culture numérique et le design de l'information.
+
+### 🛠️ Outils & Ressources Techniques
+- 🐳 [**Docker WordPress**](./dockerwordpress/) : Environnement local WordPress conteneurisé.
+- 📦 [**Webpack Multipage**](./webpack-multipage/) : Configuration Webpack optimisée pour sites multi-pages.
+- 🎨 [**Sass Exo 01**](./sass-exo-01/) : Exercices et bonnes pratiques des préprocesseurs CSS.
+- ⌨️ [**WebDev Shortcuts**](./WebDev-Shortcuts/) : Aide-mémoire des raccourcis pour le développement web.
+
+### 🎓 Formation & Mentorat
+- 🎯 [**OC TheArtBox**](./oc-theartbox/) : Supports et aide-mémoire pour le mentorat OpenClassrooms.
+
+### 🎨 Projets Artistiques & Expérimentaux
+- 🖼️ [**Keith Haring**](./keith-haring/) : Projet artistique et expérimentation web interactive.
+
+---
+
+## 🌐 Mon Studio & Mes Initiatives
+
+- 🏢 **Citywizz** : Mon studio d'architecture web ([citywizz.com](https://citywizz.com)). Écosystème applicatif et guide local intelligent dédié à la valorisation du territoire lyonnais.
+- 🎓 **Wanimi** : Formation web et accompagnement technique pour les professionnels du numérique.
+- 📚 **Tasdawit** : Bibliothèque humaine des mémoires partagées, archive communautaire via Omeka S.
+- 📰 **Kabyle.com** : Média communautaire historique (depuis 1999), gestion de l'archivage et de l'audience.
+- 🗺️ **Madacity** : Guide culturel et encyclopédie visuelle de Madagascar (projet en cours).
+
+---
+
+## 🛠️ Stack Technique Principale
+
+| Catégorie | Technologies |
 | :--- | :--- |
-| La "page blanche" au démarrage d'un projet et la difficulté à choisir les bonnes technologies. | Des **stacks techniques éprouvées** et justifiées pour des cas d'usage réels. |
-| Le fossé de communication entre les besoins métiers et les contraintes techniques. | Des schémas visuels (Mermaid) et un vocabulaire commun compréhensible par tous. |
-| L'accessibilité et la performance traitées comme des rustines en fin de projet. | Une approche **"Shift-Left"** : RGAA/WCAG, écoconception et sécurité intégrés dès la conception. |
+| **Frontend** | React, Next.js, Astro, WordPress FSE, Tailwind CSS, TypeScript |
+| **Backend / Data** | PHP, Node.js, PostgreSQL, MariaDB, Omeka S, REST API / GraphQL |
+| **Outils & DevOps** | Git, GitHub Actions, Docker, n8n, Figma, Mermaid.js |
+| **Qualité** | Axe-core, Lighthouse, Playwright, RankMath, Plausible Analytics |
 
 ---
 
-## 🗺️ Vue d'ensemble d'une Architecture Moderne
+## 📬 Me Contacter
 
-Chaque fiche de ce dépôt suit une logique de séparation des préoccupations (Separation of Concerns). Voici le modèle mental récurrent :
+Une idée de projet, un besoin de structuration de connaissances ou une mission via mon studio sur la région lyonnaise ? Discutons de la manière dont nous pouvons rendre votre écosystème numérique plus robuste, accessible et pérenne.
 
-```mermaid
-flowchart LR
-    classDef layer fill:#f9f9f9,stroke:#333,stroke-width:2px,rx:5,ry:5
-    classDef component fill:#e1f5fe,stroke:#01579b,stroke-width:1px
-    classDef data fill:#fff3e0,stroke:#e65100,stroke-width:1px
-    classDef ai fill:#f3e5f5,stroke:#6a1b9a,stroke-width:1px
-
-    subgraph CLIENT ["1. Expérience Utilisateur (Frontend)"]
-        A[Interface Web / Mobile\nReact, Next.js, Astro, FSE]:::component
-    end
-
-    subgraph LOGIC ["2. Logique Métier & Orchestration"]
-        B[API, Server Actions, Mu-Plugins\nValidation, Règles métier]:::component
-        C[Moteur IA / RAG\nLLM, Tool Calling, Agents]:::ai
-    end
-
-    subgraph DATA ["3. Données & Persistance"]
-        D[(Base de données\nPostgreSQL, MariaDB)]:::data
-        E[(Stockage Fichiers\nS3, Cloud, Vector DB)]:::data
-    end
-
-    subgraph EXT ["4. Services Externes"]
-        F[Paiement, Cartographie, Analytics\nStripe, Leaflet, Plausible]:::component
-    end
-
-    CLIENT <-->|"Requêtes & Affichage"| LOGIC
-    LOGIC <-->|"Lecture / Écriture"| DATA
-    LOGIC -.->|"Appels API"| EXT
-
-    class CLIENT,LOGIC,DATA,EXT layer
-```
-
----
-
-## 📂 Cas d'Usage & Fiches d'Architecture
-
-Chaque fiche détaille les briques logiques, les choix techniques, les flux de données et les points de vigilance (Sécurité, Accessibilité, Coûts).
-
-### 🤖 IA & Expérience Utilisateur
-*Comment intégrer l'IA de manière utile, éthique et performante.*
-- 📄 [**UX Agentique & Chat-First**](./architectures-web-ia/agentic-ux-chat-first.md) : Remplacer la navigation par l'intention. Stack LLM, Tool Calling et RAG.
-- 📄 [**RAG pour Service Client**](./architectures-web-ia/architecture-rag-service-client.md) : Assistant virtuel fiable, sourcé et conforme RGPD/HDS.
-
-### 🛒 E-commerce, Catalogues & Sites Vitrines
-*Performance, SEO local et gestion de contenu éditorial.*
-- 📄 [**Catalogue Auto Headless**](./architectures-web-ia/architecture-site-vitrine-catalogue-auto-headless.md) : Astro + Pages CMS. Zéro maintenance, 100% statique.
-- 📄 [**Gestion de Menus de Restauration**](./architectures-web-ia/architecture-application-full-stack-gestion-de-menus-restauration.md) : Next.js Full-stack, accessibilité et souveraineté des données.
-- 📄 [**Catalogue Interactif Data-Driven**](./architectures-web-ia/architecture-catalogue-interactif-data-driven.md) : Moteur React/Vite réutilisable piloté par manifeste JSON (Flipbook/Swiper).
-
-### 🏛️ Patrimoine, Archives & Structuration de Données
-*Préservation de la mémoire, interopérabilité et données complexes.*
-- 📄 [**Écosystème Patrimonial (WP + Omeka S + Zotero)**](./architectures-web-ia/architecture-ecosysteme-patrimonial-wp-omeka-zotero.md) : Le meilleur des deux mondes : narration grand public et rigueur archivistique.
-- 📄 [**Plateforme de Mémoire Orale (Tasdawit)**](./architectures-web-ia/architecture-plateforme-tasdawit-omeka-scripto.md) : Collecte, transcription communautaire (Scripto/Whisper) et conservation HDS.
-
-### 📱 No-Code, Low-Code & Prototypage
-*Solutions rapides pour valider un marché ou un besoin pédagogique.*
-- 📄 [**Application de Suivi Éducatif**](./architectures-web-ia/architecture-nocode-adalo-figma-app-suivi-educatif.md) : Adalo + Figma. Prototypage rapide avec Design System et flux de données clairs.
-
-### ⚙️ Socle Technique & Multi-Sites
-*Industrialisation et maintenance à l'échelle.*
-- 📄 [**Agenda Multi-Sites (Code Commun)**](./architectures-web-ia/architecture-agenda-code-commun-unifie.md) : Un seul plugin Meta Box/Mu-plugin déployé sur plusieurs sites WordPress indépendants.
-
----
-
-## 🛠️ Méthodologie & Standards de Qualité
-
-La technique ne vaut rien sans rigueur. Le dossier [`methodologie/`](./methodologie/) contient les grilles de lecture et les guides utilisés pour construire ces architectures :
-
-- 📐 [**Guide de rédaction de diagrammes Mermaid**](./methodologie/guide-mermaid.md) : Comment créer des schémas clairs, maintenables et accessibles.
-- ♿ [**Checklist d'Accessibilité (RGAA / WCAG)**](./methodologie/checklist-accessibilite.md) : Les points de contrôle non-négociables avant toute mise en production.
-
----
-
-## 🎯 Comment utiliser ce dépôt ?
-
-Ce référentiel est conçu pour être une **source unique de vérité** (Single Source of Truth) adaptable à votre rôle :
-
-| Votre Profil | Comment en tirer parti ? |
-| :--- | :--- |
-| **Chef de Projet / Product Owner** | Piochez une fiche pour rédiger vos user stories, estimer la complexité et valider la faisabilité technique avant le développement. |
-| **Développeur / Architecte** | Récupérez la structure des briques logiques, les recommandations de stack et les pièges à éviter pour démarrer un projet sur des bases saines. |
-| **Formateur / Apprenant / Jury** | Utilisez ces fiches comme des études de cas pédagogiques complètes pour enseigner ou évaluer la capacité à concevoir un système d'information cohérent. |
-
----
-
-## 👤 Auteur & Contact
-
-**Stéphane Arrami**
-*Architecte de l'Information · Expert Accessibilité (RGAA/WCAG) · Formateur*
-📍 Lyon, France (Disponible en remote ou sur site)
-🌐 [Portfolio](https://votre-site.com) · [💼 LinkedIn](https://linkedin.com/in/votre-profil)
-
-> *Ce dépôt est sous licence [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). Vous êtes libre de partager et d'adapter ce contenu, à condition d'en créditer l'auteur et de partager vos modifications dans les mêmes conditions.*
+📧 **contact@stephane-arrami.com**
