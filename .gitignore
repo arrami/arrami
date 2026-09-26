@@ -9,3 +9,8 @@ Thumbs.db
 
 # Logs
 *.log
+
+
+
+# Ignore les vrais fichiers de configuration de veille pour ne pas les pousser sur GitHub
+automation/veille-wordpress-seo/veille-wordpress-seo.json

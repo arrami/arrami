@@ -1,0 +1,24 @@
+{
+  "feeds": [
+    {
+      "name": "WordPress News",
+      "url": "https://wordpress.org/news/feed/"
+    },
+    {
+      "name": "Search Engine Land",
+      "url": "https://searchengineland.com/feed"
+    },
+    {
+      "name": "Matt Mullenweg (Ma.tt)",
+      "url": "https://ma.tt/feed/"
+    },
+    {
+      "name": "Planet WordPress",
+      "url": "https://planet.wordpress.org/feed/"
+    },
+    {
+      "name": "OpenAI Blog",
+      "url": "https://openai.com/news/rss.xml"
+    }
+  ]
+}

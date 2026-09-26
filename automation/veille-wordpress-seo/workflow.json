@@ -1,0 +1,183 @@
+{
+  "name": "Veille Tech & SEO - Markdown Quotidien",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 200]
+    },
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Manual Trigger (Test)",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [220, 400]
+    },
+    {
+      "parameters": {
+        "fileSelector": "/home/node/.n8n-files/flux.txt",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0008-4000-8000-000000000008",
+      "name": "Lire flux.txt",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Lit flux.txt : une URL par ligne, les lignes vides ou commençant par # sont ignorées\nconst buffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nconst lines = buffer.toString('utf8').split(/\\r?\\n/);\n\nconst feeds = lines\n  .map(l => l.trim())\n  .filter(l => l && !l.startsWith('#'))\n  .map(url => ({ json: { url } }));\n\nif (feeds.length === 0) {\n  throw new Error('Aucune URL trouvée dans flux.txt');\n}\nreturn feeds;"
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Extraire les URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0004-4000-8000-000000000004",
+      "name": "RSS Feed Read",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [900, 300],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Garde les articles des dernières 24 h, du plus récent au plus ancien\nconst now = Date.now();\nconst DAY = 24 * 60 * 60 * 1000;\nconst dateStr = new Date().toISOString().split('T')[0];\n\nconst items = $input.all()\n  .map(i => i.json)\n  .filter(a => {\n    const d = new Date(a.isoDate || a.pubDate || 0).getTime();\n    return d && now - d <= DAY;\n  })\n  .sort((a, b) => new Date(b.isoDate || b.pubDate) - new Date(a.isoDate || a.pubDate));\n\nlet markdown = `# Veille Technologique & SEO - ${dateStr}\\n\\n`;\n\nif (items.length === 0) {\n  markdown += '_Aucun nouvel article dans les dernières 24 h._\\n';\n}\n\nfor (const a of items) {\n  const title = a.title || 'Sans titre';\n  const link = a.link || '#';\n  const text = (a.contentSnippet || a.content || '').replace(/<[^>]*>?/gm, '').replace(/\\s+/g, ' ').trim();\n  const snippet = text.length > 150 ? text.substring(0, 150) + '…' : text;\n  markdown += `* **[${title}](${link})**\\n`;\n  if (snippet) markdown += `  * Extrait : ${snippet}\\n`;\n  markdown += '\\n';\n}\n\nreturn [{ json: { markdown, fileName: `veille-${dateStr}.md` } }];"
+      },
+      "id": "a1b2c3d4-0005-4000-8000-000000000005",
+      "name": "Format Daily Markdown",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "operation": "toText",
+        "sourceProperty": "markdown",
+        "options": {
+          "fileName": "={{ $json.fileName }}"
+        }
+      },
+      "id": "a1b2c3d4-0006-4000-8000-000000000006",
+      "name": "Convert to File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [1340, 300]
+    },
+    {
+      "parameters": {
+        "operation": "write",
+        "fileName": "=/home/node/.n8n-files/{{ $('Format Daily Markdown').item.json.fileName }}",
+        "dataPropertyName": "data",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0007-4000-8000-000000000007",
+      "name": "Write Markdown to Disk",
+      "type": "n8n-nodes-base.readWriteFile",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Lire flux.txt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Manual Trigger (Test)": {
+      "main": [
+        [
+          {
+            "node": "Lire flux.txt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS Feed Read": {
+      "main": [
+        [
+          {
+            "node": "Format Daily Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Daily Markdown": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Write Markdown to Disk",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire flux.txt": {
+      "main": [
+        [
+          {
+            "node": "Extraire les URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire les URL": {
+      "main": [
+        [
+          {
+            "node": "RSS Feed Read",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
