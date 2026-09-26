@@ -1,0 +1,12 @@
+{
+  "feeds": [
+    {
+      "name": "WordPress News",
+      "url": "https://wordpress.org/news/feed/"
+    },
+    {
+      "name": "Search Engine Land",
+      "url": "https://searchengineland.com/feed"
+    }
+  ]
+}
