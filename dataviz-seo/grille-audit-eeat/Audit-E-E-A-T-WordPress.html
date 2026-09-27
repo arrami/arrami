@@ -189,6 +189,10 @@ details.more summary{cursor:pointer;font-size:13px;color:var(--accent);font-weig
           <li><b>Formules creuses.</b> Les clichés comptent plein ; les connecteurs banals (« en effet », « par ailleurs », « bien sûr ») comptent pour un quart, car un bon texte en contient aussi. Le mode domaine ajoute les formules creuses propres au SEO (« le contenu est roi », « Google adore »…).</li>
           <li><b>Un score élevé ne prouve rien à lui seul.</b> Les articles d'essai « crédibles » sont fictifs : leurs chiffres et leur auteur sont inventés. Un texte bien imité peut obtenir un bon score ; seule la vérification des sources et de l'auteur tranche.</li>
           <li><b>Ce qui reste humain.</b> La page vérifie la forme, jamais le fond : elle ne sait pas si un chiffre existe chez la source citée, ni si l'expérience racontée a eu lieu. Les critères éliminatoires 2 et 3 se cochent après vérification.</li>
+          <li><b>Citations, tableaux et questions.</b> Le texte entre guillemets, les citations (blockquote) et les cellules de tableau ne sont pas pris pour des affirmations de l'auteur : un article qui cite un mauvais exemple pour le dénoncer n'est pas pénalisé. Les chiffres et dates suspects qu'ils contiennent restent affichés « à vérifier », sans compter dans le score. Un faussaire pourrait en profiter en cachant ses chiffres dans un tableau : lisez ces signaux.</li>
+          <li><b>Sections courtes.</b> Une section de moins de 50 mots n'est pas pénalisée si elle porte un tableau, une figure ou un bloc de code, ni si c'est la dernière section et qu'elle contient des liens (ressources, outil). Les sous-titres sont comptés avec leur section parente.</li>
+          <li><b>Chiffres sans source.</b> Le critère 2 tombe à 0 s'il y a au moins deux chiffres sans source et au moins 2 pour 1 000 mots, ou une formule d'auto-protection avec un chiffre sans source. Deux chiffres perdus dans un long article le font descendre à 1. La page ne sait pas distinguer un chiffre qui décrit votre propre méthode (« 45 % du score ») d'une statistique : corrigez la note d'un clic dans ce cas.</li>
+          <li><b>Fin de texte.</b> La dernière vraie phrase de texte courant doit se terminer par une ponctuation. Un libellé de lien final (« Télécharger le script »), un tableau ou une image ne comptent pas.</li>
           <li><b>Langue.</b> Les règles sont écrites pour des textes en français.</li>
         </ul>
       </details>
@@ -238,7 +242,8 @@ const FIRST = /\b(j'(ai|utilise|recommande|installe|teste|mesure|conseille)|je (
 const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
 const STUDY = /\b(étude|données|rapport|baromètre|enquête|tendances?|statistiques?|analyse|bilan|chiffres)\b/i;
 const FULLYEAR = /(sur l'ensemble (des données|de l'année)|consolidé|bilan (annuel|de l'année)|sur toute l'année|année complète|sur l'année)/i;
-const NOISE = ['footer','nav','aside','header','.yarpp','.yarpp-related','.related-posts','.post-navigation','.ogeeat-author-box','.ogeeat-share','.ast-post-social-sharing','.ast-social-inner-wrap','.entry-meta','.comments-area','#comments','.wp-block-buttons','.sharedaddy','.author-box','.post-author','.breadcrumb','.sidebar','#sidebar','script','style','noscript'];
+const NOISE = ['footer','nav','aside','header','.yarpp','.yarpp-related','.related-posts','.post-navigation','.ogeeat-author-box','.ogeeat-share','.ast-post-social-sharing','.ast-social-inner-wrap','.entry-meta','.comments-area','#comments','.wp-block-buttons','.sharedaddy','.author-box','.post-author','.breadcrumb','.sidebar','#sidebar','script','style','noscript',
+  '[class*="author-box"]','[class*="author-bio"]','[class*="about-author"]','[class*="share"]','[class*="related"]','[class*="newsletter"]','[class*="toc"]','#toc','.ez-toc-container'];
 
 const $ = s => document.querySelector(s);
 const state = {notes:{}, auto:{}, weights:{}, auth:[false,false,false,false]};
@@ -257,6 +262,9 @@ function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;
 function cut(s,n=150){s=s.trim();return s.length>n?s.slice(0,n-1)+'…':s;}
 function words(s){return (s.match(/[\p{L}\p{N}'-]+/gu)||[]);}
 function splitSentences(t){return t.split(/(?<=[.!?…])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>2);}
+// Retire les passages entre guillemets : une citation n'est pas une affirmation de l'auteur
+function isQuestion(s){ return /\?[\s»"”')\]]*$/.test(s); }
+function unquote(s){ return s.replace(/«[^»]{0,400}»/g,' … ').replace(/“[^”]{0,400}”/g,' … ').replace(/"[^"]{0,400}"/g,' … '); }
 function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
 function phraseRe(p){return new RegExp('(?<![\\p{L}])'+reEsc(p)+'(?![\\p{L}])','iu');}
 const CLICHE_RE = CLICHES.map(p=>[p,phraseRe(p)]);
@@ -375,12 +383,20 @@ function parse(raw){
     try{ siteHost = canon ? new URL(canon).hostname.replace(/^www\./,'') : ''; }catch(e){ siteHost=''; }
     NOISE.forEach(sel => { try { doc.querySelectorAll(sel).forEach(el => el.remove()); } catch(e){} });
     const scope = doc.querySelector('.entry-content') || doc.querySelector('main article') || doc.querySelector('article') || doc.body;
-    scope.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,td,blockquote,figcaption').forEach(el=>{
+    scope.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,td,th,blockquote,figcaption,table,figure,img,pre,video,iframe').forEach(el=>{
+      if(/^(TABLE|FIGURE|IMG|PRE|VIDEO|IFRAME)$/.test(el.tagName)){
+        if(!(el.tagName==='IMG' && el.closest('figure'))) blocks.push({type:'media', text:'', links:[], media:el.tagName.toLowerCase()});
+        return;
+      }
       if(el.closest('li') && el.tagName!=='LI') return;
-      const text = norm(el.textContent.replace(/\s+/g,' ').trim());
+      if(el.parentElement && el.parentElement.closest('blockquote') && el.tagName!=='BLOCKQUOTE') return;
+      if(el.parentElement && el.parentElement.closest('td,th') && !/^T[DH]$/.test(el.tagName)) return;
+      const clean = n => { const c=n.cloneNode(true); c.querySelectorAll('svg,script,style,noscript').forEach(x=>x.remove()); return norm(c.textContent.replace(/\s+/g,' ').trim()); };
+      const text = clean(el);
       if(!text) return;
-      const links = [...el.querySelectorAll('a[href]')].map(a=>({text:norm(a.textContent.replace(/\s+/g,' ').trim()), href:a.getAttribute('href')})).filter(a=>a.text);
-      blocks.push({type:/^H\d$/.test(el.tagName)?'h':(el.tagName==='FIGCAPTION'?'cap':'p'), text, links});
+      const links = [...el.querySelectorAll('a[href]')].map(a=>({text:clean(a), href:a.getAttribute('href')})).filter(a=>a.text);
+      const type = /^H\d$/.test(el.tagName)?'h' : el.tagName==='FIGCAPTION'?'cap' : (el.tagName==='TD'||el.tagName==='TH')?'cell' : el.tagName==='BLOCKQUOTE'?'quote' : 'p';
+      blocks.push({type, text, links, level: type==='h' ? +el.tagName[1] : 0});
     });
   } else {
     const lines = raw.split(/\n/);
@@ -389,22 +405,39 @@ function parse(raw){
       const md = /^#{1,6}\s+/.test(t);
       const next = (lines.slice(i+1).find(x=>x.trim())||'');
       const looksHeading = md || (words(t).length<=12 && !/[.!?:;,…]$/.test(t) && !/^[-*•\d]/.test(t) && next.length>0);
-      blocks.push({type:looksHeading?'h':'p', text:t.replace(/^#{1,6}\s+/,''), links:(t.match(/https?:\/\/\S+/g)||[]).map(u=>({text:u,href:u}))});
+      blocks.push({type:looksHeading?'h':'p', text:t.replace(/^#{1,6}\s+/,''), level: md ? t.match(/^#+/)[0].length : 2, links:(t.match(/https?:\/\/\S+/g)||[]).map(u=>({text:u,href:u}))});
     });
   }
   return {isHtml, blocks, siteHost};
 }
 
+function jsonLdPeople(doc){
+  const people=[], sections=[];
+  const walk=o=>{
+    if(!o || typeof o!=='object') return;
+    if(Array.isArray(o)){ o.forEach(walk); return; }
+    const t=[].concat(o['@type']||[]);
+    if(t.includes('Person') && o.name) people.push(o);
+    if(o.articleSection) sections.push(...[].concat(o.articleSection));
+    Object.values(o).forEach(v=>{ if(v && typeof v==='object') walk(v); });
+  };
+  doc.querySelectorAll('script[type="application/ld+json"]').forEach(sc=>{ try{ walk(JSON.parse(sc.textContent)); }catch(e){} });
+  return {people, sections};
+}
 function detectAuthorSignals(raw){
   if(!/</.test(raw)) return [false,false,false,false];
   let doc; try { doc = new DOMParser().parseFromString(norm(raw),'text/html'); } catch(e){ return [false,false,false,false]; }
+  const {people, sections} = jsonLdPeople(doc);
   const html = doc.documentElement.innerHTML.toLowerCase();
   const domain = $('#domainOn').checked;
+  const namedAuthor = people.some(p=>!/^(admin|administrat|rédaction|redaction|webmaster)/i.test(p.name));
+  const boxWithPhoto = !!doc.querySelector('[class*="author"] img, .avatar, img[class*="avatar"]');
   return [
-    /itemprop=["']author["']|rel=["']author["']/.test(html) || !!doc.querySelector('.author-box img, .avatar, [itemprop="author"]'),
-    /itemprop=["']sameas["']/.test(html) || /linkedin\.com\/in\/|profiles\.wordpress\.org/.test(html),
+    namedAuthor || !!doc.querySelector('a[rel~="author"], [itemprop="author"]') || boxWithPhoto,
+    people.some(p=>[].concat(p.sameAs||[]).length || p.url) || !!doc.querySelector('[itemprop="sameAs"]') || /linkedin\.com\/in\/|profiles\.wordpress\.org/.test(html),
     /mentions[- ]l[ée]gales|siret|siren/i.test(html),
-    domain ? /category-(seo|wordpress)|rel=["']category tag["'][^>]*>\s*(seo|wordpress)/i.test(html) : /rel=["']category( tag)?["']/.test(html)
+    domain ? (/category-(seo|wordpress)|rel=["'][^"']*category[^"']*["'][^>]*>\s*(seo|wordpress|référencement)/i.test(html) || sections.some(x=>/seo|wordpress|référencement/i.test(x)))
+           : (/rel=["'][^"']*category/.test(html) || sections.length>0)
   ];
 }
 
@@ -415,8 +448,11 @@ function analyze(){
   const pubY = pub.getFullYear(), pubM = pub.getMonth();
   const {isHtml, blocks, siteHost} = parse(raw);
   const body = blocks.map(b=>b.text).join('\n');
-  const sents = [];
-  blocks.forEach(b=>{ if(b.type==='p') splitSentences(b.text).forEach(s=>sents.push({s, block:b})); });
+  const sents = [], aside = [];
+  blocks.forEach(b=>{
+    if(b.type==='p') splitSentences(b.text).forEach(s=>sents.push({s, block:b, u:unquote(s)}));
+    else if(b.type==='cell' || b.type==='quote') splitSentences(b.text).forEach(s=>aside.push({s, block:b, u:unquote(s), where:b.type==='cell'?'un tableau':'une citation'}));
+  });
   const totalWords = words(body).length;
   $('#mode').textContent = raw.trim()? (isHtml?'Mode HTML : liens et titres détectés':'Mode texte : titres devinés, liens non visibles')+($('#domainOn').checked?' · renfort SEO/WordPress actif':' · mode générique') : '';
   const R = {};
@@ -424,8 +460,8 @@ function analyze(){
   // 1. Expérience
   {
     const f=[]; let anon=0, named=0, metric=0;
-    sents.forEach(({s},i)=>{
-      if(!FIRST.test(s)) return;
+    sents.forEach(({s,u},i)=>{
+      if(!FIRST.test(u)) return;
       const ctx = s+' '+(sents[i+1]?.s||'');
       const tool = isToolNamed(ctx);
       const hasMetric = /\d+[,.]?\d*\s?(s|ms|%|secondes?|minutes?|min|heures?|clics|visites|positions?|€|euros?|kg|g|°C|W|mAh|Go|Mo)\b|passé de|avant.*après|de \d+[,.]?\d* à \d+/i.test(ctx);
@@ -451,9 +487,17 @@ function analyze(){
     const f=[]; let stats=0, unlinked=0, hedgesBad=0;
     const linksIn = (s,block) => block.links.filter(a=>s.includes(a.text)).map(a=>linkQuality(a.href,siteHost));
     const bestLink = arr => arr.sort((a,b)=>a.w-b.w)[0];
-    sents.forEach(({s,block},i)=>{
-      const low=s.toLowerCase();
-      const hasStat=/\d+[,.]?\d*\s?%|\b\d+\s?(fois|millions?|milliards?)\b|\bx\d+\b/i.test(s);
+    const STAT=/\d+[,.]?\d*\s?%|\b\d+\s?(fois|millions?|milliards?)\b|\bx\d+\b/i;
+    let asideStats=0;
+    aside.forEach(({s,u,block,where})=>{
+      if(isQuestion(s) || !STAT.test(u)) return;
+      const lq=bestLink(linksIn(s,block));
+      if(!(lq && lq.w===0)){ asideStats++; f.push({lvl:'info',k:`Chiffre sans lien dans ${where} (non compté, à vérifier)`,text:s}); }
+    });
+    sents.forEach(({s,u,block},i)=>{
+      const low=u.toLowerCase();
+      const quotedStatSourced = !STAT.test(u) && STAT.test(s) && !!isBrandCited(u);
+      const hasStat = !isQuestion(s) && (STAT.test(u) || quotedStatSourced);
       const lq = bestLink(linksIn(s,block));
       const linked = !!lq && lq.w<1;
       const hedgeHit = HEDGES.find(h => low.includes(h));
@@ -477,24 +521,28 @@ function analyze(){
     let n, why;
     if(!stats){n=1; why="Aucun chiffre détecté : vérifiez les affirmations factuelles à la main."}
     else if(unlinked===0 && hedgesBad===0){n=2; why=`${stats} chiffre(s), tous liés à leur source.`}
-    else if(unlinked/stats>0.5 || hedgesBad>=2){n=0; why=`${fmt(unlinked)}/${stats} chiffre(s) sans lien valable, ${hedgesBad} formule(s) d'auto-protection.`}
+    else if((unlinked>=2 && unlinked/stats>0.5 && unlinked/Math.max(totalWords,1)*1000>=2) || hedgesBad>=2 || (unlinked>=1 && hedgesBad>=1)){n=0; why=`${fmt(unlinked)}/${stats} chiffre(s) sans lien valable, ${hedgesBad} formule(s) d'auto-protection.`}
     else {n=1; why=`${fmt(unlinked)}/${stats} chiffre(s) sans lien valable, ${hedgesBad} formule(s) d'auto-protection.`}
+    if(asideStats) why+=` ${asideStats} chiffre(s) dans des tableaux ou citations, non comptés : à vérifier à la main.`;
     R.src={suggest:n,reason:why,findings:dedupe(f)};
   }
 
   // 3. Temporel
   {
-    const f=[]; let impossible=0, risky=0;
-    sents.forEach(({s})=>{
-      const low=s.toLowerCase();
-      (s.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
+    const f=[]; let impossible=0, risky=0, asideDates=0;
+    aside.forEach(({s,u,where})=>{
+      (u.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{ y=+y; if(y>pubY || (y===pubY && FULLYEAR.test(u))){ asideDates++; f.push({lvl:'info',k:`Date suspecte dans ${where} (non comptée, à vérifier)`,text:s}); } });
+    });
+    sents.forEach(({s,u})=>{
+      const low=u.toLowerCase();
+      (u.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
         y=+y;
         if(y>pubY){impossible++; f.push({lvl:'bad',k:`Année ${y} postérieure à la publication`,text:s}); return;}
         if(y===pubY){
           const m = MONTHS.findIndex(mo=>new RegExp(mo+'\\s+'+y).test(low));
           if(m>pubM){impossible++; f.push({lvl:'bad',k:`${MONTHS[m]} ${y} est après la publication`,text:s});}
-          else if(FULLYEAR.test(s)){impossible++; f.push({lvl:'bad',k:`Données « annuelles » ${y} avant la fin de l'année`,text:s});}
-          else if(STUDY.test(s)){risky++; f.push({lvl:'warn',k:`Étude de ${y} à vérifier`,text:s});}
+          else if(FULLYEAR.test(u)){impossible++; f.push({lvl:'bad',k:`Données « annuelles » ${y} avant la fin de l'année`,text:s});}
+          else if(STUDY.test(u)){risky++; f.push({lvl:'warn',k:`Étude de ${y} à vérifier`,text:s});}
         }
       });
     });
@@ -506,17 +554,34 @@ function analyze(){
   // 4. Structure
   {
     const f=[]; let thin=0; const heads=[];
-    blocks.forEach((b,i)=>{ if(b.type==='h'){ let w=0; for(let j=i+1;j<blocks.length&&blocks[j].type!=='h';j++) w+=words(blocks[j].text).length; heads.push({t:b.text,w}); }});
+    blocks.forEach((b,i)=>{ if(b.type!=='h') return;
+      let w=0, media=[], links=0;
+      for(let j=i+1;j<blocks.length;j++){
+        const nb=blocks[j];
+        if(nb.type==='h' && (nb.level||2)<=(b.level||2)) break;
+        if(nb.type==='media') media.push(nb.media); else { w+=words(nb.text).length; links+=nb.links.length; }
+      }
+      heads.push({t:b.text,w,media,links});
+    });
     const headsReal = heads.filter(h => !/^(sommaire|table des mati|publications? similaires?|articles? (similaires|r[ée]cents?|li[ée]s)|à lire aussi|commentaires?|laisser un commentaire|partager|r[ée]sum[ée] de l'article|[àa] propos de l'auteur)/i.test(h.t.trim()));
-    headsReal.slice(1).forEach(h=>{ if(h.w<50 && !/conclusion/i.test(h.t)){thin++; f.push({lvl:'bad',k:`Section de ${h.w} mots`,text:h.t});} });
+    headsReal.slice(1).forEach((h,idx,arr)=>{
+      if(h.w>=50 || /conclusion/i.test(h.t)) return;
+      if(h.media.length){ f.push({lvl:'info',k:`Section courte (${h.w} mots) portée par un ${h.media.includes('table')?'tableau':h.media[0]==='pre'?'bloc de code':'visuel'} : non pénalisée`,text:h.t}); return; }
+      if(idx===arr.length-1 && h.links>0){ f.push({lvl:'info',k:`Section finale de ressources (${h.w} mots, ${h.links} lien(s)) : non pénalisée`,text:h.t}); return; }
+      thin++; f.push({lvl:'bad',k:`Section de ${h.w} mots`,text:h.t});
+    });
     headsReal.forEach(h=>{
       const m=h.t.match(/\b(\d+)\s+(outils|extensions|plugins|étapes|astuces|conseils|erreurs|recettes|modèles|produits)\b/i);
       if(m) f.push({lvl:'warn',k:`Promet ${m[1]} ${m[2]} : compter les éléments`,text:h.t});
-      if(/\b(liste|top|comparatif)\b/i.test(h.t) && h.w<80) f.push({lvl:'bad',k:'Liste annoncée quasi vide',text:h.t});
+      if(/\b(liste|top|comparatif)\b/i.test(h.t) && h.w<80 && !h.media.length) f.push({lvl:'bad',k:'Liste annoncée quasi vide',text:h.t});
     });
-    if(body.trim() && !/[.!?…»)\]]$/.test(body.trim())) f.push({lvl:'bad',k:'Fin de texte tronquée',text:body.trim().slice(-120)});
+    // Fin tronquée : on regarde le dernier bloc de texte courant qui n'est pas un simple libellé de lien
+    const linkOnly = b => b.links.length && words(b.links.reduce((t,a)=>t.replace(a.text,' '), b.text)).length < 5;
+    const lastRun = [...blocks].reverse().find(b => b.type==='p' && !linkOnly(b));
+    if(lastRun && words(lastRun.text).length>=8 && !/[.!?…:»)\]"”]$/.test(lastRun.text.trim())) f.push({lvl:'bad',k:'Fin de texte tronquée',text:lastRun.text.trim().slice(-120)});
     const bad=f.filter(x=>x.lvl==='bad').length;
-    let n=bad>=2?0:(bad||f.length?1:2);
+    const warn=f.filter(x=>x.lvl==='warn').length;
+    let n=bad>=2?0:(bad||warn?1:2);
     if(!headsReal.length) n=1;
     const why=headsReal.length?`${headsReal.length} section(s), ${thin} de moins de 50 mots.`:"Aucun titre de contenu détecté.";
     R.struct={suggest:n,reason:why,findings:dedupe(f)};
@@ -525,12 +590,12 @@ function analyze(){
   // 5. Densité
   {
     const f=[]; let cl=0, fill=0; const dom=domainClicheRes();
-    sents.forEach(({s})=>{
-      const hit=CLICHE_RE.find(([,re])=>re.test(s));
+    sents.forEach(({s,u})=>{
+      const hit=CLICHE_RE.find(([,re])=>re.test(u));
       if(hit){cl++; f.push({lvl:'warn',k:`Formule creuse : ${hit[0]}`,text:s}); return;}
-      const dh=dom.find(([,re])=>re.test(s));
+      const dh=dom.find(([,re])=>re.test(u));
       if(dh){cl++; f.push({lvl:'warn',k:`Formule creuse du domaine : ${dh[0]}`,text:s}); return;}
-      const fh=FILLER_RE.find(([,re])=>re.test(s));
+      const fh=FILLER_RE.find(([,re])=>re.test(u));
       if(fh){fill++; f.push({lvl:'info',k:`Connecteur banal (¼ de poids) : ${fh[0]}`,text:s});}
     });
     const long=sents.map(x=>x.s).filter(s=>words(s).length>=8);

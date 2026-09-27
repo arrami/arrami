@@ -180,10 +180,11 @@ RE_SUBJ = re.compile(r"^(?:l'|le |la |les )?(\S+(?:\s+\S+){0,3}?)\s+(?:a\s+)?(es
                      r"révèle|révèlent|montre|montrent|constate|note|publie|mesure|chiffre|évalue|observe|annonce)\b", re.I)
 
 # Classes et balises des widgets injectés dans le contenu (articles similaires, partage, auteur…)
-NOISE_TAGS = {"nav", "aside", "footer", "header", "script", "style", "noscript", "form"}
+NOISE_TAGS = {"nav", "aside", "footer", "header", "script", "style", "noscript", "form", "svg"}
 NOISE_CLASSES = ["yarpp", "related-posts", "post-navigation", "ogeeat-author-box", "ogeeat-share",
                  "ast-post-social-sharing", "ast-social-inner-wrap", "entry-meta", "comments-area", "wp-block-buttons",
-                 "sharedaddy", "jp-relatedposts", "author-box", "post-author", "breadcrumb", "sidebar", "share"]
+                 "sharedaddy", "jp-relatedposts", "author-box", "author-bio", "about-author", "post-author", "breadcrumb",
+                 "sidebar", "share", "related", "newsletter", "ez-toc"]
 
 
 class Rules:
@@ -311,6 +312,33 @@ def is_brand_cited(text, rules):
     return None
 
 
+def json_ld_people(content):
+    """Auteurs (Person) et rubriques trouvés dans les blocs JSON-LD du contenu, @graph compris."""
+    people, sections = [], []
+
+    def walk(o):
+        if isinstance(o, list):
+            for x in o:
+                walk(x)
+        elif isinstance(o, dict):
+            types = o.get("@type") if isinstance(o.get("@type"), list) else [o.get("@type")]
+            if "Person" in types and o.get("name") and not re.match(r"(admin|administrat|rédaction|redaction|webmaster)", str(o["name"]), re.I):
+                people.append(o)
+            if o.get("articleSection"):
+                sec = o["articleSection"]
+                sections.extend(sec if isinstance(sec, list) else [sec])
+            for v in o.values():
+                if isinstance(v, (dict, list)):
+                    walk(v)
+
+    for block in re.findall(r"<script[^>]+application/ld\+json[^>]*>(.*?)</script>", content or "", re.S | re.I):
+        try:
+            walk(json.loads(block))
+        except ValueError:
+            pass
+    return people, [str(x) for x in sections]
+
+
 def link_quality(href, site_host):
     """(poids manquant, niveau, libellé) : 0 = source valable, 0.5 = faible, 1 = ne compte pas."""
     h = (href or "").strip()
@@ -386,7 +414,8 @@ def normalize_post(p):
 # Découpage du HTML en blocs (titres / paragraphes / légendes / liens)
 # --------------------------------------------------------------------------
 class BlockParser(HTMLParser):
-    BLOCKS = {"h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "td", "blockquote", "figcaption"}
+    BLOCKS = {"h1", "h2", "h3", "h4", "h5", "h6", "p", "li", "td", "th", "blockquote", "figcaption"}
+    MEDIA = {"table", "figure", "img", "pre", "video", "iframe"}
     VOID = {"br", "img", "hr", "input", "meta", "link", "source", "wbr", "area", "col", "embed", "param", "track"}
 
     def __init__(self):
@@ -394,15 +423,23 @@ class BlockParser(HTMLParser):
         self.blocks, self.stack, self.cur = [], [], None
         self.a_href, self.a_text, self.in_a = None, "", False
         self.skip_depth, self.open_tags = 0, []
+        self.cell_depth = self.quote_depth = self.figure_depth = 0
 
     def _noise(self, tag, attrs):
-        cls = (dict(attrs).get("class") or "") + " " + (dict(attrs).get("id") or "")
-        return tag in NOISE_TAGS or any(n in cls for n in NOISE_CLASSES)
+        a = dict(attrs)
+        classes = (a.get("class") or "").split()
+        ident = a.get("id") or ""
+        return (tag in NOISE_TAGS or any(n in c for c in classes for n in NOISE_CLASSES)
+                or "toc" in classes or ident in ("toc", "comments", "sidebar"))
 
     def handle_starttag(self, tag, attrs):
         if tag in self.VOID:
-            if tag == "br" and self.cur is not None and not self.skip_depth:
+            if self.skip_depth:
+                return
+            if tag == "br" and self.cur is not None:
                 self.cur["text"] += " "
+            if tag == "img" and not self.figure_depth:
+                self.blocks.append({"type": "media", "text": "", "links": [], "media": "img"})
             return
         self.open_tags.append(tag)
         if self.skip_depth:
@@ -411,11 +448,28 @@ class BlockParser(HTMLParser):
         if self._noise(tag, attrs):
             self.skip_depth = 1
             return
+        if tag in self.MEDIA:
+            self.blocks.append({"type": "media", "text": "", "links": [], "media": tag})
+            if tag == "figure":
+                self.figure_depth += 1
+        if tag in ("td", "th"):
+            self.cell_depth += 1
+        if tag == "blockquote":
+            self.quote_depth += 1
         if tag in self.BLOCKS:
             if self.cur is not None:
                 self.stack.append(self.cur)
-            t = "h" if tag[0] == "h" and tag[1:].isdigit() else ("cap" if tag == "figcaption" else "p")
-            self.cur = {"type": t, "text": "", "links": []}
+            if tag[0] == "h" and tag[1:].isdigit():
+                t = "h"
+            elif tag == "figcaption":
+                t = "cap"
+            elif self.cell_depth:
+                t = "cell"
+            elif self.quote_depth:
+                t = "quote"
+            else:
+                t = "p"
+            self.cur = {"type": t, "text": "", "links": [], "level": int(tag[1]) if t == "h" else 0}
         elif tag == "a" and dict(attrs).get("href") is not None:
             self.in_a, self.a_text, self.a_href = True, "", dict(attrs).get("href")
 
@@ -437,6 +491,12 @@ class BlockParser(HTMLParser):
             if self.cur["text"]:
                 self.blocks.append(self.cur)
             self.cur = self.stack.pop() if self.stack else None
+        if tag in ("td", "th"):
+            self.cell_depth = max(0, self.cell_depth - 1)
+        elif tag == "blockquote":
+            self.quote_depth = max(0, self.quote_depth - 1)
+        elif tag == "figure":
+            self.figure_depth = max(0, self.figure_depth - 1)
 
     def handle_data(self, data):
         if self.skip_depth:
@@ -468,8 +528,18 @@ def parse_blocks(content):
         heading = t.startswith("#") or (len(RE_WORD.findall(t)) <= 12 and not re.search(r"[.!?:;,…]$", t)
                                         and not re.match(r"^[-*•\d]", t) and bool(nxt))
         blocks.append({"type": "h" if heading else "p", "text": t.lstrip("# "),
+                       "level": len(re.match(r"#*", t).group(0)) or 2,
                        "links": [{"text": u, "href": u} for u in re.findall(r"https?://\S+", t)]})
     return blocks
+
+
+def unquote(s):
+    """Retire les passages entre guillemets : une citation n'est pas une affirmation de l'auteur."""
+    return re.sub(r'"[^"]{0,400}"', " … ", re.sub(r"“[^”]{0,400}”", " … ", re.sub(r"«[^»]{0,400}»", " … ", s)))
+
+
+def is_question(s):
+    return re.search(r"\?[\s»\"”')\]]*$", s) is not None
 
 
 def sentences(text):
@@ -486,6 +556,9 @@ def words(s):
 def analyze(post, rules):
     blocks = parse_blocks(post["html"])
     sents = [(s, b) for b in blocks if b["type"] == "p" for s in sentences(b["text"])]
+    unq = [unquote(s) for s, _ in sents]
+    aside = [(s, b, unquote(s), "un tableau" if b["type"] == "cell" else "une citation")
+             for b in blocks if b["type"] in ("cell", "quote") for s in sentences(b["text"])]
     body = "\n".join(b["text"] for b in blocks)
     n_words = len(words(body))
     site_host = (urlparse(post.get("url") or "").hostname or "").removeprefix("www.")
@@ -499,7 +572,7 @@ def analyze(post, rules):
     # 1. Expérience
     anon = named = metric = missed = 0
     for i, (s, _) in enumerate(sents):
-        if not RE_FIRST.search(s):
+        if not RE_FIRST.search(unq[i]):
             continue
         ctx = s + " " + (sents[i + 1][0] if i + 1 < len(sents) else "")
         tool = is_tool_named(ctx, rules)
@@ -533,8 +606,17 @@ def analyze(post, rules):
         q = [link_quality(a["href"], site_host) for a in b["links"] if a["text"] and a["text"] in s]
         return min(q, key=lambda x: x[0]) if q else None
 
+    aside_stats = 0
+    for s, b, u, where in aside:
+        if is_question(s) or not RE_STAT.search(u):
+            continue
+        lq = best_link(s, b)
+        if not (lq and lq[0] == 0):
+            aside_stats += 1
+            F["src"].append(("info", f"Chiffre sans lien dans {where} (non compté, à vérifier)", s))
     for i, (s, b) in enumerate(sents):
-        low = s.lower()
+        u = unq[i]
+        low = u.lower()
         lq = best_link(s, b)
         linked = lq is not None and lq[0] < 1
         if any(h in low for h in HEDGES):
@@ -545,7 +627,8 @@ def analyze(post, rules):
             else:
                 hedges_bad += 1
                 F["src"].append(("alerte", "Formule d'auto-protection", s))
-        if RE_STAT.search(s):
+        quoted_sourced = not RE_STAT.search(u) and RE_STAT.search(s) and is_brand_cited(u, rules)
+        if not is_question(s) and (RE_STAT.search(u) or quoted_sourced):
             stats += 1
             if lq and lq[0] == 0:
                 F["src"].append(("ok", "Chiffre avec lien vers la source", s))
@@ -562,21 +645,29 @@ def analyze(post, rules):
                                  f"{pre} : attribué à {src[0]}{'' if lq else ' sans lien'} ({src[1]})", s))
             else:
                 F["src"].append(("alerte", f"{pre}, sans source nommée" if lq else "Chiffre sans source nommée", s))
-    u = f"{unlinked:g}".replace(".", ",")
+    nu = f"{unlinked:g}".replace(".", ",")
     if not stats:
         S["src"], why["src"] = 1, "Aucun chiffre détecté : vérifier les affirmations à la main."
     elif unlinked == 0 and hedges_bad == 0:
         S["src"], why["src"] = 2, f"{stats} chiffre(s), tous liés à leur source."
-    elif unlinked / stats > 0.5 or hedges_bad >= 2:
-        S["src"], why["src"] = 0, f"{u}/{stats} chiffre(s) sans lien valable, {hedges_bad} formule(s) d'auto-protection."
+    elif (unlinked >= 2 and unlinked / stats > 0.5 and unlinked / max(n_words, 1) * 1000 >= 2) \
+            or hedges_bad >= 2 or (unlinked >= 1 and hedges_bad >= 1):
+        S["src"], why["src"] = 0, f"{nu}/{stats} chiffre(s) sans lien valable, {hedges_bad} formule(s) d'auto-protection."
     else:
-        S["src"], why["src"] = 1, f"{u}/{stats} chiffre(s) sans lien valable, {hedges_bad} formule(s) d'auto-protection."
+        S["src"], why["src"] = 1, f"{nu}/{stats} chiffre(s) sans lien valable, {hedges_bad} formule(s) d'auto-protection."
+    if aside_stats:
+        why["src"] += f" {aside_stats} chiffre(s) dans des tableaux ou citations, non comptés : à vérifier à la main."
 
     # 3. Temporel
     impossible = risky = 0
-    for s, _ in sents:
-        low = s.lower()
-        for y in map(int, re.findall(r"\b((?:19|20)\d{2})\b", s)):
+    for s, _, u, where in aside:
+        for y in map(int, re.findall(r"\b((?:19|20)\d{2})\b", u)):
+            if y > pub.year or (y == pub.year and RE_FULLYEAR.search(u)):
+                F["time"].append(("info", f"Date suspecte dans {where} (non comptée, à vérifier)", s))
+    for i, (s, _) in enumerate(sents):
+        u = unq[i]
+        low = u.lower()
+        for y in map(int, re.findall(r"\b((?:19|20)\d{2})\b", u)):
             if y > pub.year:
                 impossible += 1
                 F["time"].append(("alerte", f"Année {y} postérieure à la publication", s))
@@ -585,58 +676,81 @@ def analyze(post, rules):
                 if m is not None and m + 1 > pub.month:
                     impossible += 1
                     F["time"].append(("alerte", f"{MONTHS[m]} {y} est après la publication", s))
-                elif RE_FULLYEAR.search(s):
+                elif RE_FULLYEAR.search(u):
                     impossible += 1
                     F["time"].append(("alerte", f"Données « annuelles » {y} avant la fin de l'année", s))
-                elif RE_STUDY.search(s):
+                elif RE_STUDY.search(u):
                     risky += 1
                     F["time"].append(("moyen", f"Étude de {y} à vérifier", s))
     S["time"] = 0 if impossible else (1 if risky else 2)
     why["time"] = (f"{impossible} date(s) impossible(s)." if impossible else
                    f"{risky} étude(s) de {pub.year} à vérifier." if risky else "Aucune incohérence temporelle.")
 
-    # 4. Structure
+    # 4. Structure : une section va jusqu'au prochain titre de niveau égal ou supérieur
     heads = []
     for i, b in enumerate(blocks):
-        if b["type"] == "h":
-            w = 0
-            for nb in blocks[i + 1:]:
-                if nb["type"] == "h":
-                    break
+        if b["type"] != "h":
+            continue
+        w, media, links = 0, [], 0
+        for nb in blocks[i + 1:]:
+            if nb["type"] == "h" and (nb.get("level") or 2) <= (b.get("level") or 2):
+                break
+            if nb["type"] == "media":
+                media.append(nb["media"])
+            else:
                 w += len(words(nb["text"]))
-            if not RE_HEAD_SKIP.search(b["text"].strip()):
-                heads.append((b["text"], w))
+                links += len(nb["links"])
+        if not RE_HEAD_SKIP.search(b["text"].strip()):
+            heads.append((b["text"], w, media, links))
     thin = 0
-    for t, w in heads[1:]:
-        if w < 50 and not re.search(r"conclusion", t, re.I):
-            thin += 1
-            F["struct"].append(("alerte", f"Section de {w} mots", t))
-    for t, w in heads:
+    rest = heads[1:]
+    for idx, (t, w, media, links) in enumerate(rest):
+        if w >= 50 or re.search(r"conclusion", t, re.I):
+            continue
+        if media:
+            kind = "tableau" if "table" in media else ("bloc de code" if media[0] == "pre" else "visuel")
+            F["struct"].append(("info", f"Section courte ({w} mots) portée par un {kind} : non pénalisée", t))
+            continue
+        if idx == len(rest) - 1 and links:
+            F["struct"].append(("info", f"Section finale de ressources ({w} mots, {links} lien(s)) : non pénalisée", t))
+            continue
+        thin += 1
+        F["struct"].append(("alerte", f"Section de {w} mots", t))
+    for t, w, media, _ in heads:
         m = re.search(r"\b(\d+)\s+(outils|extensions|plugins|étapes|astuces|conseils|erreurs|recettes|modèles|produits)\b", t, re.I)
         if m:
             F["struct"].append(("moyen", f"Promet {m.group(1)} {m.group(2)} : compter les éléments", t))
-        if re.search(r"\b(liste|top|comparatif)\b", t, re.I) and w < 80:
+        if re.search(r"\b(liste|top|comparatif)\b", t, re.I) and w < 80 and not media:
             F["struct"].append(("alerte", "Liste annoncée quasi vide", t))
-    if body.strip() and not re.search(r"[.!?…»)\]]$", body.strip()):
-        F["struct"].append(("alerte", "Fin de texte tronquée", body.strip()[-120:]))
+    # Fin tronquée : dernier bloc de texte courant qui n'est pas un simple libellé de lien
+    def link_only(b):
+        rest = b["text"]
+        for a in b["links"]:
+            rest = rest.replace(a["text"], " ", 1)
+        return bool(b["links"]) and len(words(rest)) < 5
+    last_run = next((b for b in reversed(blocks) if b["type"] == "p" and not link_only(b)), None)
+    if last_run and len(words(last_run["text"])) >= 8 and not re.search(r"[.!?…:»)\]\"”]$", last_run["text"].strip()):
+        F["struct"].append(("alerte", "Fin de texte tronquée", last_run["text"].strip()[-120:]))
     bad = sum(1 for f in F["struct"] if f[0] == "alerte")
-    S["struct"] = 1 if not heads else (0 if bad >= 2 else (1 if F["struct"] else 2))
+    warn = sum(1 for f in F["struct"] if f[0] == "moyen")
+    S["struct"] = 1 if not heads else (0 if bad >= 2 else (1 if bad or warn else 2))
     why["struct"] = f"{len(heads)} section(s), {thin} de moins de 50 mots." if heads else "Aucun titre de contenu détecté."
 
     # 5. Densité
     cl = fill = 0
-    for s, _ in sents:
-        hit = next((p for p, r in rules.cliches if r.search(s)), None)
+    for i, (s, _) in enumerate(sents):
+        u = unq[i]
+        hit = next((p for p, r in rules.cliches if r.search(u)), None)
         if hit:
             cl += 1
             F["dens"].append(("moyen", f"Formule creuse : {hit}", s))
             continue
-        dh = next((p for p, r in rules.dom_cliches if r.search(s)), None)
+        dh = next((p for p, r in rules.dom_cliches if r.search(u)), None)
         if dh:
             cl += 1
             F["dens"].append(("moyen", f"Formule creuse du domaine : {dh}", s))
             continue
-        fh = next((p for p, r in rules.fillers if r.search(s)), None)
+        fh = next((p for p, r in rules.fillers if r.search(u)), None)
         if fh:
             fill += 1
             F["dens"].append(("info", f"Connecteur banal (1/4 de poids) : {fh}", s))
@@ -656,14 +770,16 @@ def analyze(post, rules):
                    f"pour {n_words} mots (indice {per1k:.1f} pour 1 000 mots).".replace(".", ",", 1))
 
     # 6. Auteur : lu dans l'API (la note reste à confirmer)
-    name = (post.get("author") or "").strip()
+    ld_people, ld_sections = json_ld_people(post["html"])
+    name = (post.get("author") or "").strip() or next((p.get("name", "") for p in ld_people), "")
     bio = post.get("author_bio") or ""
     checks = [
         bool(name) and name.lower() not in {"admin", "administrator", "administrateur", "rédaction", "redaction", "webmaster"},
         len(bio) >= 40,
-        bool(post.get("author_url")) or bool(re.search(r"linkedin\.com/in/|profiles\.wordpress\.org", bio, re.I)),
-        bool(post.get("categories")) and (not rules.domain_on or any(
-            re.search(r"seo|wordpress|référencement|web", c, re.I) for c in post.get("categories", []))),
+        bool(post.get("author_url")) or bool(re.search(r"linkedin\.com/in/|profiles\.wordpress\.org", bio, re.I))
+        or any(p.get("sameAs") or p.get("url") for p in ld_people),
+        bool(post.get("categories") or ld_sections) and (not rules.domain_on or any(
+            re.search(r"seo|wordpress|référencement|web", c, re.I) for c in (post.get("categories") or []) + ld_sections)),
     ]
     c = sum(checks)
     S["auth"] = 2 if c >= 4 else (1 if c >= 2 else 0)
