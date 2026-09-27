@@ -1,459 +1,714 @@
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-    <style>
-      :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
-    </style>
-  </head>
-  <body>
-    <title>Audit E-E-A-T WordPress</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
-    <style>
-      :root{
-        --bg:#F2F5F4;--surface:#FFFFFF;--sunk:#E9EEEC;--ink:#16201F;--muted:#586866;--line:#D5DDDB;
-        --accent:#0E6B63;--accent-ink:#FFFFFF;--accent-soft:#DCEDEA;
-        --good:#2E7D32;--good-soft:#E3F1E4;--warn:#9A6414;--warn-soft:#F7ECD9;--bad:#B63326;--bad-soft:#F7E0DD;
-        --display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
-        --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
-        --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
-      }
-      @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-        color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
-        --accent:#4DB6A9;--accent-ink:#0B1413;--accent-soft:#1B3431;
-        --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}}
-      :root[data-theme="dark"]{
-        color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
-        --accent:#4DB6A9;--accent-ink:#0B1413;--accent-soft:#1B3431;
-        --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}
-      *{box-sizing:border-box}
-      body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding-inline:16px;padding-block:24px 48px}
-      .wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
-      header{display:grid;gap:6px}
-      h1{font:700 clamp(26px,4vw,36px)/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
-      .lede{color:var(--muted);margin:0;max-width:70ch}
-      .layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
-      @media (max-width:880px){.layout{grid-template-columns:1fr}}
-      .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
-      .input-panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
-      @media (max-width:880px){.input-panel{position:static}}
-      label.lbl,.lbl{font:600 11px/1 var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
-      .field{display:grid;gap:6px}
-      input[type=date],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
-      textarea{min-height:360px;resize:vertical;font:13px/1.5 var(--mono)}
-      input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-      .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-      button{font:600 14px/1 var(--body);border-radius:6px;padding:10px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
-      button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
-      button:hover{filter:brightness(1.05)}
-      .hint{font-size:13px;color:var(--muted);margin:0}
-      .mode{font:500 12px/1 var(--mono);color:var(--muted)}
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Audit E-E-A-T WordPress</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F2F5F4;--surface:#FFFFFF;--sunk:#E9EEEC;--ink:#16201F;--muted:#586866;--line:#D5DDDB;
+  --accent:#0E6B63;--accent-ink:#FFFFFF;
+  --good:#2E7D32;--good-soft:#E3F1E4;--warn:#9A6414;--warn-soft:#F7ECD9;--bad:#B63326;--bad-soft:#F7E0DD;
+  --display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+  --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
+  --accent:#4DB6A9;--accent-ink:#0B1413;
+  --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}}
+:root[data-theme="dark"]{
+  color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
+  --accent:#4DB6A9;--accent-ink:#0B1413;
+  --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding-inline:16px;padding-block:24px 48px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
+header{display:grid;gap:6px}
+h1{font:700 clamp(26px,4vw,36px)/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{color:var(--muted);margin:0;max-width:70ch}
+.layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
+@media (max-width:880px){.layout{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
+.input-panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:880px){.input-panel{position:static}}
+.lbl{font:600 11px/1 var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.field{display:grid;gap:6px}
+input[type=date],input[type=number],textarea,select{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+textarea{resize:vertical;font:13px/1.5 var(--mono)}
+#article{min-height:320px}
+#domainList,#domainCliches{min-height:120px;font-size:12px}
+input:focus-visible,textarea:focus-visible,button:focus-visible,select:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button{font:600 14px/1 var(--body);border-radius:6px;padding:10px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:hover{filter:brightness(1.05)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.hint code{font:12px var(--mono);background:var(--sunk);padding:1px 4px;border-radius:3px}
+.mode{font:500 12px/1 var(--mono);color:var(--muted)}
+.domain{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:14px}
+.switch{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.switch input{margin-top:3px;accent-color:var(--accent)}
+.score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+@media (max-width:520px){.score{grid-template-columns:1fr}}
+.gauge{width:128px;height:128px;position:relative}
+.gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+.gauge .num{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+.gauge .num b{font:700 38px/1 var(--display);font-variant-numeric:tabular-nums}
+.gauge .num span{font:500 12px/1 var(--mono);color:var(--muted);margin-top:4px}
+.verdict{display:grid;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;font:600 13px/1 var(--body);padding:6px 10px;border-radius:999px;width:fit-content}
+.pill.good{background:var(--good-soft);color:var(--good)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+.verdict p{margin:0;color:var(--muted);font-size:14px}
+.formula{font:12px/1.5 var(--mono);color:var(--muted);background:var(--sunk);padding:8px 10px;border-radius:6px;overflow-x:auto;white-space:nowrap}
+.warnbox{font-size:13px;color:var(--warn);background:var(--warn-soft);padding:8px 10px;border-radius:6px;margin:0}
+.elim{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:14px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.check input{margin-top:3px;accent-color:var(--bad)}
+.tag{font:500 11px/1 var(--mono);padding:3px 6px;border-radius:4px;background:var(--bad-soft);color:var(--bad);margin-left:6px;white-space:nowrap}
+.limits{border:1px solid var(--line);border-radius:10px;background:var(--surface);padding:14px 18px}
+.limits summary{cursor:pointer;font:600 15px/1.3 var(--display)}
+.limits ul{margin:10px 0 0;padding-left:18px;display:grid;gap:6px;font-size:14px;color:var(--muted)}
+.limits b{color:var(--ink);font-weight:600}
+.crit{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;background:var(--surface)}
+.crit[data-n="0"]{border-left-color:var(--bad)}.crit[data-n="1"]{border-left-color:var(--warn)}.crit[data-n="2"]{border-left-color:var(--good)}
+.crit-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.crit h3{margin:0;font:600 16px/1.3 var(--display)}
+.weight{display:flex;align-items:center;gap:6px;font:12px var(--mono);color:var(--muted)}
+.weight input{width:56px;padding:4px 6px;font:13px var(--mono);text-align:right}
+.pts{font:500 13px var(--mono);font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:7px 12px;font:500 13px var(--mono);background:var(--surface)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"][data-v="0"]{background:var(--bad);color:var(--surface)}
+.seg button[aria-pressed="true"][data-v="1"]{background:var(--warn);color:var(--surface)}
+.seg button[aria-pressed="true"][data-v="2"]{background:var(--good);color:var(--surface)}
+.suggest{font-size:13px;color:var(--muted)}
+.suggest b{color:var(--ink);font-weight:600}
+.findings{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.findings li{font-size:13px;background:var(--sunk);border-radius:6px;padding:7px 10px;display:grid;gap:3px}
+.findings li .k{font:500 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+.findings li.bad .k{color:var(--bad)}.findings li.warn .k{color:var(--warn)}.findings li.good .k{color:var(--good)}.findings li.info .k{color:var(--muted)}
+.findings q{quotes:"« " " »";color:var(--ink);overflow-wrap:anywhere}
+.manual{display:grid;gap:6px}
+details.more summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:500}
+.stats{display:flex;gap:16px;flex-wrap:wrap;font:12px var(--mono);color:var(--muted)}
+.stats b{color:var(--ink);font-weight:500}
+.toast{font-size:13px;color:var(--good);min-height:1em}
+@media (prefers-reduced-motion:no-preference){.gauge circle.val{transition:stroke-dashoffset .5s ease}}
+</style>
 
-      /* Score */
-      .score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
-      @media (max-width:520px){.score{grid-template-columns:1fr}}
-      .gauge{width:128px;height:128px;position:relative}
-      .gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
-      .gauge .num{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
-      .gauge .num b{font:700 38px/1 var(--display);font-variant-numeric:tabular-nums}
-      .gauge .num span{font:500 12px/1 var(--mono);color:var(--muted);margin-top:4px}
-      .verdict{display:grid;gap:8px}
-      .pill{display:inline-flex;align-items:center;gap:6px;font:600 13px/1 var(--body);padding:6px 10px;border-radius:999px;width:fit-content}
-      .pill.good{background:var(--good-soft);color:var(--good)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
-      .pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
-      .verdict p{margin:0;color:var(--muted);font-size:14px}
-      .formula{font:12px/1.5 var(--mono);color:var(--muted);background:var(--sunk);padding:8px 10px;border-radius:6px;overflow-x:auto;white-space:nowrap}
+<div class="wrap">
+  <header>
+    <h1>Audit E-E-A-T WordPress</h1>
+    <p class="lede">Collez un article : la page repère les signaux de faux article d'expert, propose une note de 0 à 2 pour chacun des six critères et calcule le score pondéré sur 100. Les suggestions sont des pistes ; la note finale reste la vôtre.</p>
+  </header>
 
-      /* Eliminatoires */
-      .elim{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:14px}
-      .check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
-      .check input{margin-top:3px;accent-color:var(--bad)}
-      .tag{font:500 11px/1 var(--mono);padding:3px 6px;border-radius:4px;background:var(--bad-soft);color:var(--bad);margin-left:6px;white-space:nowrap}
-
-      /* Critères */
-      .crit{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;background:var(--surface)}
-      .crit[data-n="0"]{border-left-color:var(--bad)}.crit[data-n="1"]{border-left-color:var(--warn)}.crit[data-n="2"]{border-left-color:var(--good)}
-      .crit-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
-      .crit h3{margin:0;font:600 16px/1.3 var(--display)}
-      .weight{display:flex;align-items:center;gap:6px;font:12px var(--mono);color:var(--muted)}
-      .weight input{width:56px;padding:4px 6px;font:13px var(--mono);text-align:right}
-      .pts{font:500 13px var(--mono);font-variant-numeric:tabular-nums}
-      .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
-      .seg button{border:0;border-radius:0;padding:7px 12px;font:500 13px var(--mono);background:var(--surface)}
-      .seg button+button{border-left:1px solid var(--line)}
-      .seg button[aria-pressed="true"][data-v="0"]{background:var(--bad);color:var(--surface)}
-      .seg button[aria-pressed="true"][data-v="1"]{background:var(--warn);color:var(--surface)}
-      .seg button[aria-pressed="true"][data-v="2"]{background:var(--good);color:var(--surface)}
-      .suggest{font-size:13px;color:var(--muted)}
-      .suggest b{color:var(--ink);font-weight:600}
-      .findings{list-style:none;margin:0;padding:0;display:grid;gap:6px}
-      .findings li{font-size:13px;background:var(--sunk);border-radius:6px;padding:7px 10px;display:grid;gap:3px}
-      .findings li .k{font:500 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.05em}
-      .findings li.bad .k{color:var(--bad)}.findings li.warn .k{color:var(--warn)}.findings li.good .k{color:var(--good)}
-      .findings q{quotes:"« " " »";color:var(--ink);overflow-wrap:anywhere}
-      .manual{display:grid;gap:6px}
-      details summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:500}
-      .stats{display:flex;gap:16px;flex-wrap:wrap;font:12px var(--mono);color:var(--muted)}
-      .stats b{color:var(--ink);font-weight:500}
-      .toast{font-size:13px;color:var(--good);min-height:1em}
-      @media (prefers-reduced-motion:no-preference){.gauge circle.val{transition:stroke-dashoffset .5s ease}}
-    </style>
-
-    <div class="wrap">
-      <header>
-        <h1>Audit E-E-A-T WordPress</h1>
-        <p class="lede">Collez un article : la page repère les signaux de faux article d'expert, propose une note de 0 à 2 pour chacun des six critères et calcule le score pondéré sur 100. Les suggestions sont des pistes ; la note finale reste la vôtre.</p>
-      </header>
-
-      <div class="layout">
-        <section class="panel input-panel" aria-label="Article à auditer">
-          <div class="row">
-            <div class="field">
-              <label class="lbl" for="pubdate">Date de publication</label>
-              <input type="date" id="pubdate" value="2026-09-25" />
-            </div>
-            <span class="mode" id="mode"></span>
-          </div>
-          <div class="field">
-            <label class="lbl" for="article">Texte ou code HTML de l'article</label>
-            <textarea id="article" spellcheck="false"></textarea>
-          </div>
-          <p class="hint">Astuce : dans WordPress, copiez le contenu depuis l'éditeur de code (Ctrl+Maj+Alt+M). En HTML, la page voit les liens et les titres, donc l'analyse des sources et de la structure est plus fiable.</p>
-          <div class="row">
-            <button class="primary" id="run">Analyser l'article</button>
-            <button id="sample">Recharger l'exemple</button>
-            <button id="clear">Vider</button>
-          </div>
-          <div class="stats" id="stats"></div>
-        </section>
-
-        <div class="wrap" style="gap:16px">
-          <section class="panel" aria-label="Score">
-            <div class="score">
-              <div class="gauge" aria-hidden="true">
-                <svg viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="52" fill="none" stroke="var(--sunk)" stroke-width="12" />
-                  <circle class="val" id="gaugeVal" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
-                </svg>
-                <div class="num">
-                  <b id="scoreNum">0</b>
-                  <span>/ 100</span>
-                </div>
-              </div>
-              <div class="verdict">
-                <span class="pill" id="pill">
-                  <i></i>
-                  <span id="pillTxt"></span>
-                </span>
-                <p id="verdictTxt"></p>
-                <div class="formula" id="formula"></div>
-              </div>
-            </div>
-            <div class="elim">
-              <span class="lbl">Critères éliminatoires (un seul plafonne le score à 40)</span>
-              <label class="check">
-                <input type="checkbox" id="e1" />
-                <span>
-                  Date impossible : une étude citée ne pouvait pas exister à la date de publication
-                  <span class="tag" id="e1tag" hidden>suggéré</span>
-                </span>
-              </label>
-              <label class="check">
-                <input type="checkbox" id="e2" />
-                <span>Statistique introuvable chez la source citée, après vérification</span>
-              </label>
-              <label class="check">
-                <input type="checkbox" id="e3" />
-                <span>Faux témoignage : expérience contredite par le texte ou fonction inexistante dans l'outil</span>
-              </label>
-            </div>
-            <div class="row">
-              <button id="copy">Copier le rapport</button>
-              <span class="toast" id="toast" role="status"></span>
-            </div>
-          </section>
-
-          <div id="criteria" class="wrap" style="gap:12px"></div>
+  <div class="layout">
+    <section class="panel input-panel" aria-label="Article à auditer">
+      <div class="row">
+        <div class="field">
+          <label class="lbl" for="pubdate">Date de publication</label>
+          <input type="date" id="pubdate" value="2026-09-25">
+        </div>
+        <div class="field">
+          <label class="lbl" for="sample">Article d'essai</label>
+          <select id="sample">
+            <option value="">Mon article (collé)</option>
+            <option value="seoFake">SEO : faux expert</option>
+            <option value="seoGood">SEO : retour d'expérience crédible (fictif)</option>
+            <option value="cookGood">Cuisine : test crédible (fictif)</option>
+            <option value="cookGoodSeo">Cuisine : test crédible, renfort SEO activé</option>
+            <option value="cookFake">Cuisine : faux test</option>
+          </select>
         </div>
       </div>
+      <p class="warnbox" id="sampleNote" hidden></p>
+      <span class="mode" id="mode"></span>
+      <div class="field">
+        <label class="lbl" for="article">Texte ou code HTML de l'article</label>
+        <textarea id="article" spellcheck="false"></textarea>
+      </div>
+      <p class="hint">Collez de préférence le HTML de la zone <code>.entry-content</code> (éditeur de code WordPress, Ctrl+Maj+Alt+M). Les widgets résiduels (articles similaires, partage, boîte auteur, commentaires) sont retirés automatiquement.</p>
+
+      <div class="domain">
+        <label class="switch" for="domainOn"><input type="checkbox" id="domainOn" checked><span><b>Renfort domaine SEO / WordPress</b><br><span class="hint">Ajoute une liste d'outils et de marques connus aux détections structurelles. Décochez pour un article d'un autre domaine : le score de base n'en dépend pas.</span></span></label>
+        <details class="more">
+          <summary>Modifier la liste du domaine</summary>
+          <div class="field" style="margin-top:8px">
+            <label class="lbl" for="domainList">Outils et marques, un par ligne</label>
+            <textarea id="domainList" spellcheck="false"></textarea>
+            <label class="lbl" for="domainCliches" style="margin-top:6px">Formules creuses propres au domaine, une par ligne</label>
+            <textarea id="domainCliches" spellcheck="false"></textarea>
+            <p class="hint">Remplacez ces deux listes par celles de votre secteur (robots de cuisine, perceuses, banques…) pour adapter la page à un autre domaine.</p>
+          </div>
+        </details>
+      </div>
+
+      <div class="row">
+        <button class="primary" id="run">Analyser l'article</button>
+        <button id="clear">Vider</button>
+      </div>
+      <div class="stats" id="stats"></div>
+    </section>
+
+    <div class="wrap" style="gap:16px">
+      <section class="panel" aria-label="Score">
+        <div class="score">
+          <div class="gauge" aria-hidden="true">
+            <svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="var(--sunk)" stroke-width="12"/><circle class="val" id="gaugeVal" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7"/></svg>
+            <div class="num"><b id="scoreNum">0</b><span>/ 100</span></div>
+          </div>
+          <div class="verdict">
+            <span class="pill" id="pill"><i></i><span id="pillTxt"></span></span>
+            <p id="verdictTxt"></p>
+            <p class="warnbox" id="warnbox" hidden></p>
+            <div class="formula" id="formula"></div>
+          </div>
+        </div>
+        <div class="elim">
+          <span class="lbl">Critères éliminatoires (un seul plafonne le score à 40)</span>
+          <label class="check"><input type="checkbox" id="e1"><span>Date impossible : une étude citée ne pouvait pas exister à la date de publication <span class="tag" id="e1tag" hidden>suggéré</span></span></label>
+          <label class="check"><input type="checkbox" id="e2"><span>Statistique introuvable chez la source citée, après vérification</span></label>
+          <label class="check"><input type="checkbox" id="e3"><span>Faux témoignage : expérience contredite par le texte ou fonction inexistante dans l'outil</span></label>
+        </div>
+        <div class="row">
+          <button id="copy">Copier le rapport</button>
+          <span class="toast" id="toast" role="status"></span>
+        </div>
+      </section>
+
+      <details class="limits" id="limits">
+        <summary>Ce que la détection automatique sait faire, et ce qu'elle ne sait pas faire</summary>
+        <ul>
+          <li><b>Outils nommés, par la structure d'abord.</b> Un outil est reconnu s'il suit un mot comme « extension », « plugin », « robot » ou « logiciel » avec une majuscule, s'il s'écrit en capitales, en CamelCase ou avec un numéro de modèle (SEOKEY, WooCommerce, TM6), ou s'il apparaît comme nom propre en milieu de phrase. La liste du domaine ne vient qu'en renfort.</li>
+          <li><b>Faux positifs possibles.</b> Un nom de ville, de personne ou de pays en milieu de phrase (« j'ai testé à Lyon ») peut passer pour un outil. Les sigles courants (SEO, FAQ, HTML, LCP…) sont exclus un par un.</li>
+          <li><b>Faux négatifs possibles.</b> Un outil écrit tout en minuscules et absent de la liste (« j'utilise canva ») n'est pas reconnu.</li>
+          <li><b>Sources.</b> Une source est reconnue quand un nom propre suit « selon », « d'après », « une étude de »… ou apparaît entre parenthèses après un chiffre. Le lien n'est visible qu'en mode HTML.</li>
+          <li><b>Qualité des liens.</b> Un lien de démonstration (example.org, localhost) ou vide ne compte pas comme source. Un lien interne, une page d'accueil ou une page de résultats de recherche compte pour moitié : il existe, mais ne mène pas à l'étude. La page ne visite pas les liens : elle ne sait pas si la page citée contient vraiment le chiffre.</li>
+          <li><b>Formules creuses.</b> Les clichés comptent plein ; les connecteurs banals (« en effet », « par ailleurs », « bien sûr ») comptent pour un quart, car un bon texte en contient aussi. Le mode domaine ajoute les formules creuses propres au SEO (« le contenu est roi », « Google adore »…).</li>
+          <li><b>Un score élevé ne prouve rien à lui seul.</b> Les articles d'essai « crédibles » sont fictifs : leurs chiffres et leur auteur sont inventés. Un texte bien imité peut obtenir un bon score ; seule la vérification des sources et de l'auteur tranche.</li>
+          <li><b>Ce qui reste humain.</b> La page vérifie la forme, jamais le fond : elle ne sait pas si un chiffre existe chez la source citée, ni si l'expérience racontée a eu lieu. Les critères éliminatoires 2 et 3 se cochent après vérification.</li>
+          <li><b>Langue.</b> Les règles sont écrites pour des textes en français.</li>
+        </ul>
+      </details>
+
+      <div id="criteria" class="wrap" style="gap:12px"></div>
     </div>
+  </div>
+</div>
 
-    <script>
-      const SAMPLE = ``;
+<script>
+// ===== RENFORT DOMAINE (optionnel, jamais une condition de détection) =====
+const DOMAIN_SEO = ['elementor','gutenberg','block editor','site editor','wpbakery','divi','beaver builder','bricks','oxygen','breakdance','kadence','brizy','themify','thrive architect','siteorigin',
+  'yoast','rank math','aioseo','all in one seo','seopress','seokey','the seo framework','slim seo','squirrly',
+  'screaming frog','sitebulb','oncrawl','semrush','ahrefs','moz','surfer seo','clearscope','frase','marketmuse','ubersuggest','answerthepublic','google search console','bing webmaster',
+  'otterly','profound','peec ai','scrunch ai','athenahq',
+  'wp rocket','litespeed cache','perfmatters','flyingpress','autoptimize','updraftplus','wordfence','query monitor','wpml','polylang','woocommerce','jetpack','cloudflare',
+  'sparktoro','backlinko','hubspot','similarweb','statista','sistrix','http archive',
+  'librecrawl','serpbear','serpapi','dataforseo','searxng','crawl4ai','firecrawl','goaccess','matomo','plausible','umami','google analytics','looker studio','pagespeed insights','lighthouse','gtmetrix','webpagetest',
+  'ai engine','jetpack ai','rank math content ai','elementor ai','angie','uncanny automator','mcp adapter','abilities api','wordlift','schema pro','getgenie','bertha ai',
+  'chatgpt','gemini','perplexity','mistral','gptbot','claudebot','perplexitybot','googlebot','bingbot','llms.txt'];
 
-      const CRITERIA = [
-        {id:'exp', name:"Preuve d'expérience", w:25, q:"Puis-je reproduire le test avec les infos données ?"},
-        {id:'src', name:"Traçabilité des sources", w:20, q:"Puis-je vérifier chaque chiffre en moins de 2 minutes ?"},
-        {id:'time', name:"Cohérence temporelle", w:15, q:"Chaque étude citée pouvait-elle exister à cette date ?"},
-        {id:'struct', name:"Intégrité de la structure", w:15, q:"Chaque promesse du sommaire est-elle tenue ?"},
-        {id:'dens', name:"Densité et valeur ajoutée", w:15, q:"Supprimer 30 % du texte ferait-il perdre de l'information ?"},
-        {id:'auth', name:"Signaux auteur et site", w:10, q:"Ferais-je confiance à cet auteur pour un conseil payant ?"}
-      ];
+// Formules creuses propres aux articles SEO (actives seulement en mode domaine)
+const DOMAIN_SEO_CLICHES = ['le contenu est roi','content is king','contenu de qualité','contenu pertinent et de qualité','google adore','google aime','les moteurs de recherche adorent','google récompense','google privilégie','google favorise','signal fort pour google','améliorer votre référencement','booster votre seo','boostez votre seo','booster votre référencement','propulser votre site','grimper dans les serp','en première page de google','en tête des résultats','une stratégie seo efficace','une stratégie seo solide','une stratégie seo gagnante','les bonnes pratiques seo','un site bien optimisé','optimiser votre site pour les moteurs','les algorithmes évoluent sans cesse','google met régulièrement à jour',"le seo n'est pas mort",'le seo est mort',"le seo évolue sans cesse",'le geo est le nouveau seo',"l'avenir du seo","l'ia change la donne","l'ia bouleverse","la révolution de l'ia",'gagner en visibilité','augmenter votre trafic','générer du trafic qualifié','attirer plus de visiteurs','des backlinks de qualité','un maillage interne efficace','le seo est un marathon','travail de longue haleine','les résultats ne se feront pas attendre',"l'expérience utilisateur est primordiale",'un référencement durable','maximiser votre visibilité','se démarquer de la concurrence',"prendre une longueur d'avance",'outil indispensable','extension indispensable','plugin indispensable','must-have','intuitif et puissant','en quelques clics'];
 
-      const PLUGINS = ['yoast','rank math','seopress','all in one seo','aioseo','the seo framework','slim seo','squirrly','wp rocket','litespeed cache','w3 total cache','wp super cache','flyingpress','perfmatters','autoptimize','asset cleanup','wp fastest cache','nitropack','elementor','jetpack','wordfence','schema pro','wp schema','smush','shortpixel','imagify','ewww','redirection','woocommerce','gutenberg','kadence','generatepress','astra','query monitor','site kit','polylang','wpml','updraftplus','cloudflare','search console','pagespeed','lighthouse','screaming frog','semrush','ahrefs'];
-      const BRANDS = ['semrush','ahrefs','sparktoro','backlinko','moz','hubspot','similarweb','brightedge','gartner','statista','sistrix','seoclarity','authoritas','datos','google','bing','microsoft','openai','perplexity'];
-      const HEDGES = ['varie selon les études','ordre de grandeur',"n'est pas détaillée","ne sont pas détaillés",'selon certaines études','selon plusieurs études','selon des experts','on estime que','les études montrent','certaines sources','il semblerait','selon les sources','à titre indicatif'];
-      const CLICHES = ['dans le paysage actuel','il est crucial','il est essentiel','en constante évolution',"à l'ère de",'levier incontournable','game changer',"n'est plus une option",'plus que jamais','en somme','en définitive','pierre angulaire','au cœur de','dans un monde où','il convient de','force est de constater','optimiser votre visibilité','transforme la stratégie en acte','véritable atout','booster votre','boostez','incontournable','révolutionne','sans plus attendre','le saviez-vous','en conclusion','il est important de noter','jouer un rôle clé','clé du succès'];
-      const FIRST = /\b(j'ai (testé|utilisé|installé|essayé|renoncé|désactivé|activé|mesuré|constaté|migré|remplacé|configuré|abandonné)|nous avons (testé|utilisé|installé|mesuré|constaté|migré)|dans mon expérience|chez mes clients|sur mes sites|sur un de mes sites|mon client|j'utilise|je recommande|je n'utilise plus)/i;
-      const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-      const STUDY = /\b(étude|données|rapport|baromètre|enquête|tendances?|statistiques?|analyse|bilan|chiffres)\b/i;
-      const FULLYEAR = /(sur l'ensemble (des données|de l'année)|consolidé|bilan (annuel|de l'année)|sur toute l'année|année complète|sur l'année)/i;
+// Sigles et mots en capitales qui ne sont pas des outils (exclus jeton par jeton)
+const NOT_TOOLS = new Set(['SEO','GEO','SEA','SMO','FAQ','IA','AI','EEAT','E-E-A-T','HTML','CSS','PHP','JS','URL','URLS','SERP','SERPS','CMS','API','RGPD','GDPR','RGAA','CTA','KPI','KPIS','ROI','B2B','B2C','PDF','CDN','DNS','UX','UI','LCP','CLS','INP','FID','TTFB','CWV','HTTP','HTTPS','SSL','TLS','JSON','XML','LLM','LLMS','PME','TPE','ETI','SAV','TVA','HT','TTC','USA','UE','NB','OK','PS','CEO','CTO','CMO','SAAS','RSS','ALT','JPG','JPEG','PNG','WEBP','AVIF','SVG','CPU','RAM','SSD','USB','WIFI','TV','DIY','FSE','PWA','AMP','SMS','QR']);
 
-      const $ = s => document.querySelector(s);
-      const state = {notes:{}, auto:{}, weights:{}, auth:[false,false,false,false]};
-      CRITERIA.forEach(c => state.weights[c.id] = c.w);
+// Mots qui prennent une majuscule sans être des noms propres (début de proposition, titres)
+const STOP_CAPS = new Set(['Le','La','Les','L','Un','Une','Des','Du','De','D','Ce','Cet','Cette','Ces','Il','Elle','Ils','Elles','On','Je','J','Nous','Vous','Tu','Mon','Ma','Mes','Notre','Nos','Votre','Vos','Son','Sa','Ses','Leur','Leurs','Selon','Après','Avant','En','Dans','Pour','Par','Sur','Sous','Avec','Sans','Mais','Et','Ou','Donc','Or','Ni','Car','Si','Quand','Comme','Puis','Enfin','Ensuite','Aussi','Bref','Oui','Non','Voici','Voilà','Chez','Entre','Vers','Depuis','Pendant','Lorsque','Parce','Afin','Tout','Tous','Toute','Toutes','Chaque','Certains','Certaines','Plusieurs','Aucun','Aucune','Même','Encore','Déjà','Ici','Là','Qui','Que','Quoi','Où','Comment','Pourquoi','Combien','Quel','Quelle','Quels','Quelles','Étape','Astuce','Conseil','Attention','Note','Exemple','Résultat','Conclusion','Introduction','Source','Sources','Bonus']);
 
-      function norm(s){return s.replace(/[’‘`]/g,"'").replace(/ /g,' ');}
-      function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-      function cut(s,n=150){s=s.trim();return s.length>n?s.slice(0,n-1)+'…':s;}
-      function words(s){return (s.match(/[\p{L}\p{N}'-]+/gu)||[]);}
-      function splitSentences(t){return t.split(/(?<=[.!?…])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>2);}
+const HEDGES = ['varie selon les études','ordre de grandeur',"n'est pas détaillée",'ne sont pas détaillés','selon certaines études','selon plusieurs études','selon des experts','on estime que','les études montrent','certaines sources','il semblerait','selon les sources','à titre indicatif'];
 
-      function parse(raw){
-        raw = norm(raw);
-        const isHtml = /<\/?(p|h[1-6]|a|ul|ol|li|div|strong|em|br)[\s>/]/i.test(raw);
-        const blocks = []; // {type:'h'|'p', text, links:[anchorTexts]}
-        if(isHtml){
-          const doc = new DOMParser().parseFromString(raw,'text/html');
-          doc.body.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,td,blockquote,figcaption').forEach(el=>{
-            if(el.closest('li') && el.tagName!=='LI' ) return;
-            const text = el.textContent.replace(/\s+/g,' ').trim(); if(!text) return;
-            const links = [...el.querySelectorAll('a[href]')].map(a=>a.textContent.trim()).filter(Boolean);
-            blocks.push({type:/^H\d$/.test(el.tagName)?'h':'p', text, links, hasLink:links.length>0});
-          });
-        } else {
-          const lines = raw.split(/\n/);
-          lines.forEach((l,i)=>{
-            const t=l.trim(); if(!t) return;
-            const md = /^#{1,6}\s+/.test(t);
-            const next = (lines.slice(i+1).find(x=>x.trim())||'');
-            const looksHeading = md || (words(t).length<=12 && !/[.!?:;,…]$/.test(t) && !/^[-*•\d]/.test(t) && next.length>0);
-            blocks.push({type:looksHeading?'h':'p', text:t.replace(/^#{1,6}\s+/,''), links:[], hasLink:/https?:\/\//.test(t)});
-          });
-        }
-        return {isHtml, blocks};
+// Formules creuses : poids plein
+const CLICHES = ['dans le paysage actuel','il est crucial','il est essentiel','en constante évolution',"à l'ère de","à l'ère du numérique","à l'heure du tout-numérique",'levier incontournable','game changer',"n'est plus une option",'plus que jamais','pierre angulaire','au cœur de','dans un monde où','il convient de','force est de constater','optimiser votre visibilité','transforme la stratégie en acte','véritable atout','booster votre','boostez','incontournable','révolutionne','sans plus attendre','le saviez-vous','il est important de noter','jouer un rôle clé','clé du succès',
+  "à l'heure où",'dans un contexte où',"dans le monde d'aujourd'hui",'il est indéniable que','nul ne peut ignorer','il va sans dire','comme chacun sait',
+  'il convient de souligner','il est à noter que',
+  'solution clé en main','gagner en efficacité','optimiser vos performances','améliorer votre productivité','booster votre croissance','décupler vos résultats','libérer tout le potentiel','passer au niveau supérieur','franchir un cap','tirer son épingle du jeu',
+  'il est important de','il est primordial de','il est fondamental de',"il faut garder à l'esprit","n'oublions pas que",'il ne faut pas perdre de vue','la clé réside dans','le secret réside dans',"l'essentiel est de",'le plus important est de',
+  'des résultats concrets','des résultats mesurables','un impact réel','un véritable levier','un atout majeur','un facteur clé de succès','une étape cruciale','une étape incontournable','un passage obligé','une condition sine qua non',
+  "à l'heure de l'intelligence artificielle",'dans un monde de plus en plus digital','dans un environnement en mutation','face aux nouveaux enjeux','face aux défis actuels','pour rester compétitif','pour ne pas se laisser distancer',
+  'dans cet article, nous allons','nous allons découvrir ensemble','explorons ensemble','plongeons dans le vif du sujet','découvrons sans plus attendre'];
+
+// Connecteurs banals : un bon texte en contient aussi, ils comptent pour un quart
+const FILLERS = ['en effet','par ailleurs','de plus','qui plus est','cela étant dit','ceci étant','soulignons que','précisons que','notons que','rappelons que','de nos jours','face à','en résumé','pour résumer','en synthèse','en conclusion','pour conclure','au final','en fin de compte','tout bien considéré','en somme','en définitive','faire la différence','sortir du lot','il est vrai que','certes','bien entendu','évidemment','naturellement','bien sûr','voyons maintenant','passons à présent'];
+
+const FIRST = /\b(j'(ai|utilise|recommande|installe|teste|mesure|conseille)|je (n'utilise plus|recommande|conseille|teste|mesure)|nous avons (testé|utilisé|installé|mesuré|constaté|migré|comparé)|nous utilisons|dans mon expérience|chez mes clients|sur mes sites?|sur un de mes sites|mon client|ma cliente|dans ma cuisine|dans mon atelier)/i;
+const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+const STUDY = /\b(étude|données|rapport|baromètre|enquête|tendances?|statistiques?|analyse|bilan|chiffres)\b/i;
+const FULLYEAR = /(sur l'ensemble (des données|de l'année)|consolidé|bilan (annuel|de l'année)|sur toute l'année|année complète|sur l'année)/i;
+const NOISE = ['footer','nav','aside','header','.yarpp','.yarpp-related','.related-posts','.post-navigation','.ogeeat-author-box','.ogeeat-share','.ast-post-social-sharing','.ast-social-inner-wrap','.entry-meta','.comments-area','#comments','.wp-block-buttons','.sharedaddy','.author-box','.post-author','.breadcrumb','.sidebar','#sidebar','script','style','noscript'];
+
+const $ = s => document.querySelector(s);
+const state = {notes:{}, auto:{}, weights:{}, auth:[false,false,false,false]};
+const CRITERIA = [
+  {id:'exp', name:"Preuve d'expérience", w:25, q:"Puis-je reproduire le test avec les infos données ?"},
+  {id:'src', name:"Traçabilité des sources", w:20, q:"Puis-je vérifier chaque chiffre en moins de 2 minutes ?"},
+  {id:'time', name:"Cohérence temporelle", w:15, q:"Chaque étude citée pouvait-elle exister à cette date ?"},
+  {id:'struct', name:"Intégrité de la structure", w:15, q:"Chaque promesse du sommaire est-elle tenue ?"},
+  {id:'dens', name:"Densité et valeur ajoutée", w:15, q:"Supprimer 30 % du texte ferait-il perdre de l'information ?"},
+  {id:'auth', name:"Signaux auteur et site", w:10, q:"Ferais-je confiance à cet auteur pour un conseil payant ?"}
+];
+CRITERIA.forEach(c => state.weights[c.id] = c.w);
+
+function norm(s){return s.replace(/[’‘`´]/g,"'").replace(/[  ]/g,' ');}
+function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+function cut(s,n=150){s=s.trim();return s.length>n?s.slice(0,n-1)+'…':s;}
+function words(s){return (s.match(/[\p{L}\p{N}'-]+/gu)||[]);}
+function splitSentences(t){return t.split(/(?<=[.!?…])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>2);}
+function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function phraseRe(p){return new RegExp('(?<![\\p{L}])'+reEsc(p)+'(?![\\p{L}])','iu');}
+const CLICHE_RE = CLICHES.map(p=>[p,phraseRe(p)]);
+const FILLER_RE = FILLERS.map(p=>[p,phraseRe(p)]);
+
+function domainTerms(){
+  if(!$('#domainOn').checked) return [];
+  return $('#domainList').value.split('\n').map(x=>x.trim().toLowerCase()).filter(Boolean);
+}
+function inText(term,low){ return new RegExp('(?<![\\p{L}\\d])'+reEsc(term)+'(?![\\p{L}\\d])','u').test(low); }
+function domainClicheRes(){
+  if(!$('#domainOn').checked) return [];
+  return $('#domainCliches').value.split('\n').map(x=>x.trim()).filter(Boolean).map(p=>[p,phraseRe(p)]);
+}
+
+// Qualité d'un lien cité comme source : ok, faible (compte pour moitié) ou nul
+function linkQuality(href, siteHost){
+  const h=(href||'').trim();
+  if(!h || h==='#' || /^(javascript|mailto|tel):/i.test(h)) return {lvl:'bad', w:1, k:'lien vide'};
+  if(/^https?:\/\/([^/]*\.)?(example\.(com|org|net)|localhost|127\.0\.0\.1|[^/]+\.(test|local|invalid|example))(:\d+)?(\/|$)/i.test(h) || /(votre-?site|mon-?site|nom-?de-?domaine|lorem)/i.test(h)) return {lvl:'bad', w:1, k:'lien de démonstration'};
+  let u; try{ u=new URL(h, siteHost?('https://'+siteHost):'https://article.invalid'); }catch(e){ return {lvl:'bad', w:1, k:'lien invalide'}; }
+  const internal = !/^https?:/i.test(h) || (siteHost && u.hostname.replace(/^www\./,'')===siteHost);
+  if(internal) return {lvl:'warn', w:.5, k:'lien interne, pas une source externe'};
+  if(/(^|\.)(google|bing|duckduckgo|qwant|ecosia)\.[a-z.]+$/i.test(u.hostname) && /\/search|[?&]q=/.test(u.pathname+u.search)) return {lvl:'warn', w:.5, k:'lien vers une recherche'};
+  if((u.pathname==='/'||u.pathname==='') && !u.search) return {lvl:'warn', w:.5, k:"lien vers une page d'accueil, pas vers l'étude"};
+  return {lvl:'good', w:0, k:'lien vers la source'};
+}
+
+// ---------- Détection structurelle ----------
+// Jetons avec leur position : "début" = premier mot ou après . : ; ! ? « ( "
+function tokens(text){
+  const out=[]; const re=/[\p{L}\p{N}][\p{L}\p{N}.+&-]*/gu; let m;
+  while((m=re.exec(text))){
+    const tok=m[0].replace(/[.-]+$/,'');
+    const before=text.slice(0,m.index).replace(/\s+$/,'');
+    const start = before==='' || /[.:;!?«(\["]$/.test(before) || /(^|\s)(—|–|-)$/.test(before);
+    out.push({t:tok,start});
+  }
+  return out;
+}
+const isAcronym = t => /^[A-ZÀ-Ý][A-ZÀ-Ý0-9-]{2,}$/.test(t) && /[A-ZÀ-Ý]{2}/.test(t) && !NOT_TOOLS.has(t.toUpperCase());
+const isCamel = t => /^[a-z]+[A-Z][\p{L}\d]*$/u.test(t) || /^[A-Z][a-z]+[A-Z][\p{L}\d]*$/u.test(t);
+const isModel = t => /^(?=.*\p{L})(?=.*\d)[\p{L}\d]{2,}$/u.test(t) && !/^\d+(e|er|ère|ème|s|h|min|ms|px|ko|mo|go|k|m|€)$/i.test(t);
+const isProper = (tk) => !tk.start && /^[A-ZÀ-Ý][\p{Ll}\d]/u.test(tk.t) && !STOP_CAPS.has(tk.t) && !NOT_TOOLS.has(tk.t.toUpperCase());
+
+const TOOL_WORDS = 'extension|plugin|outil|logiciel|thème|theme|builder|constructeur|application|appli|app|service|plateforme|module|solution|robot|machine|appareil|modèle|marque|perceuse|visseuse|four|mixeur|blender|capteur|caméra|imprimante|smartphone|ordinateur|site';
+const TOOL_KW = new RegExp('\\b(?:'+TOOL_WORDS+')s?\\s+«?\\s*([A-ZÀ-Ý0-9][\\p{L}\\d.+&-]*)','u');
+
+/** Renvoie {name, how} si un outil ou produit identifiable est nommé, sinon null.
+    Signaux structurels d'abord ; la liste du domaine n'est qu'un renfort. Travaille sur le texte d'origine (casse conservée). */
+// Étend un nom aux jetons voisins qui en font partie (WP Rocket, Rank Math, Thermomix TM6, Search Console)
+const partOfName = t => !STOP_CAPS.has(t) && (/^[A-ZÀ-Ý]/.test(t) || isModel(t) || /^v?\d+(\.\d+)+$/.test(t));
+function fullName(toks,i){
+  let a=i, b=i;
+  while(a>0 && !toks[a].start && partOfName(toks[a-1].t)) a--;
+  while(b<toks.length-1 && !toks[b+1].start && partOfName(toks[b+1].t)) b++;
+  return toks.slice(a,b+1).map(x=>x.t).join(' ');
+}
+const PLACE_BEFORE = /(?:^|\s)(à|au|aux|en|vers|près de|depuis)\s*$/i;
+
+function isToolNamed(text){
+  const toks = tokens(text);
+  const kw = text.match(TOOL_KW);
+  if(kw && !NOT_TOOLS.has(kw[1].toUpperCase()) && !STOP_CAPS.has(kw[1])){
+    const i = toks.findIndex(x=>x.t===kw[1]);
+    return {name: i>=0 ? fullName(toks,i) : kw[1], how:'type + nom'};
+  }
+  for(let i=0;i<toks.length;i++){
+    const t=toks[i].t;
+    if(isAcronym(t)) return {name:fullName(toks,i), how:'nom en capitales'};
+    if(isCamel(t)) return {name:fullName(toks,i), how:'nom de marque'};
+    if(isModel(t)) return {name:fullName(toks,i), how:'modèle ou version'};
+  }
+  if(/\bv?\d+\.\d+(\.\d+)?\b/.test(text) && !/\d+[.,]\d+\s?(%|s|ms|€|m|km|kg|g|cm|mm)/.test(text)){
+    const v=(text.match(/\bv?\d+\.\d+(\.\d+)?\b/)||[''])[0]; const i=toks.findIndex(x=>x.t===v);
+    return {name: i>=0 ? fullName(toks,i) : v, how:'numéro de version'};
+  }
+  // Nom propre en milieu de phrase, sauf après une préposition de lieu (« à Lyon »)
+  const re=/[\p{L}\p{N}][\p{L}\p{N}.+&-]*/gu; let m, k=0;
+  while((m=re.exec(text))){
+    const tk=toks[k++]; if(!tk) break;
+    if(isProper(tk) && !PLACE_BEFORE.test(text.slice(0,m.index))) return {name:fullName(toks,k-1), how:'nom propre'};
+  }
+  const low=text.toLowerCase(); const hit=domainTerms().find(t=>inText(t,low));
+  if(hit) return {name:hit, how:'liste du domaine'};
+  return null;
+}
+
+/** Renvoie le nom de la source si une source nommée est citée (signal de source + nom propre, ou parenthèse), sinon null. */
+const SRC_SIGNAL = /\b(selon|d'après|une étude (?:de|d'|du|publiée par|menée par)|l'étude (?:de|d'|du)|un rapport (?:de|d'|du)|le rapport (?:de|d'|du)|des données (?:de|d'|du)|les données (?:de|d'|du)|compilées par|publiée? par|source\s*:)\s*/giu;
+function isBrandCited(text){
+  let m; SRC_SIGNAL.lastIndex=0;
+  while((m=SRC_SIGNAL.exec(text))){
+    const after = text.slice(m.index+m[0].length).replace(/^(l'|le |la |les |un |une |du |des |de l'|«\s*)/i,'').replace(/^(étude|rapport|enquête|baromètre|analyse|données|chiffres|sondage)\s+(de l'|de la |de |d'|du |des )?/i,'');
+    const nm = after.match(/^([A-ZÀ-Ý0-9][\p{L}\d.&+-]*(?:\s+[A-ZÀ-Ý0-9][\p{L}\d.&+-]*){0,3})/u);
+    if(nm && !STOP_CAPS.has(nm[1].split(/\s/)[0]) && !NOT_TOOLS.has(nm[1].toUpperCase())) return {name:nm[1], how:'signal de source'};
+  }
+  const par = text.match(/\((?:source\s*:\s*)?([A-ZÀ-Ý][\p{L}\d.&+-]+(?:\s+[A-ZÀ-Ý][\p{L}\d.&+-]+){0,3})(?:,?\s*\d{4})?\)/u);
+  if(par && !NOT_TOOLS.has(par[1].toUpperCase()) && !STOP_CAPS.has(par[1])) return {name:par[1], how:'parenthèse'};
+  // Nom en sujet d'un verbe de source : « Semrush estime que… », « L'Insee indique… »
+  const subj = text.match(/^(?:l'|le |la |les )?([A-ZÀ-Ý][\p{L}\d.&+-]*(?:\s+[A-ZÀ-Ý][\p{L}\d.&+-]*){0,3})\s+(?:a\s+)?(estime|estiment|indique|indiquent|affirme|rapporte|révèle|révèlent|montre|montrent|constate|note|publie|mesure|chiffre|évalue|observe|annonce)/iu);
+  if(subj && !STOP_CAPS.has(subj[1].split(/\s/)[0]) && !NOT_TOOLS.has(subj[1].toUpperCase()) && /^[A-ZÀ-Ý]/.test(subj[1])) return {name:subj[1], how:'sujet + verbe de source'};
+  const low=text.toLowerCase(); const hit=domainTerms().find(t=>new RegExp('(?<![\\p{L}])'+reEsc(t)+'(?![\\p{L}])','u').test(low));
+  if(hit) return {name:hit, how:'liste du domaine'};
+  return null;
+}
+
+// ---------- Lecture du HTML ----------
+function parse(raw){
+  raw = norm(raw); let siteHost='';
+  const isHtml = /<\/?(p|h[1-6]|a|ul|ol|li|div|strong|em|br)[\s>/]/i.test(raw);
+  const blocks = [];
+  if(isHtml){
+    const doc = new DOMParser().parseFromString(raw,'text/html');
+    const canon = doc.querySelector('link[rel="canonical"]')?.getAttribute('href') || doc.querySelector('meta[property="og:url"]')?.getAttribute('content') || '';
+    try{ siteHost = canon ? new URL(canon).hostname.replace(/^www\./,'') : ''; }catch(e){ siteHost=''; }
+    NOISE.forEach(sel => { try { doc.querySelectorAll(sel).forEach(el => el.remove()); } catch(e){} });
+    const scope = doc.querySelector('.entry-content') || doc.querySelector('main article') || doc.querySelector('article') || doc.body;
+    scope.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,td,blockquote,figcaption').forEach(el=>{
+      if(el.closest('li') && el.tagName!=='LI') return;
+      const text = norm(el.textContent.replace(/\s+/g,' ').trim());
+      if(!text) return;
+      const links = [...el.querySelectorAll('a[href]')].map(a=>({text:norm(a.textContent.replace(/\s+/g,' ').trim()), href:a.getAttribute('href')})).filter(a=>a.text);
+      blocks.push({type:/^H\d$/.test(el.tagName)?'h':(el.tagName==='FIGCAPTION'?'cap':'p'), text, links});
+    });
+  } else {
+    const lines = raw.split(/\n/);
+    lines.forEach((l,i)=>{
+      const t=l.trim(); if(!t) return;
+      const md = /^#{1,6}\s+/.test(t);
+      const next = (lines.slice(i+1).find(x=>x.trim())||'');
+      const looksHeading = md || (words(t).length<=12 && !/[.!?:;,…]$/.test(t) && !/^[-*•\d]/.test(t) && next.length>0);
+      blocks.push({type:looksHeading?'h':'p', text:t.replace(/^#{1,6}\s+/,''), links:(t.match(/https?:\/\/\S+/g)||[]).map(u=>({text:u,href:u}))});
+    });
+  }
+  return {isHtml, blocks, siteHost};
+}
+
+function detectAuthorSignals(raw){
+  if(!/</.test(raw)) return [false,false,false,false];
+  let doc; try { doc = new DOMParser().parseFromString(norm(raw),'text/html'); } catch(e){ return [false,false,false,false]; }
+  const html = doc.documentElement.innerHTML.toLowerCase();
+  const domain = $('#domainOn').checked;
+  return [
+    /itemprop=["']author["']|rel=["']author["']/.test(html) || !!doc.querySelector('.author-box img, .avatar, [itemprop="author"]'),
+    /itemprop=["']sameas["']/.test(html) || /linkedin\.com\/in\/|profiles\.wordpress\.org/.test(html),
+    /mentions[- ]l[ée]gales|siret|siren/i.test(html),
+    domain ? /category-(seo|wordpress)|rel=["']category tag["'][^>]*>\s*(seo|wordpress)/i.test(html) : /rel=["']category( tag)?["']/.test(html)
+  ];
+}
+
+// ---------- Analyse ----------
+function analyze(){
+  const raw = $('#article').value;
+  const pub = new Date($('#pubdate').value || Date.now());
+  const pubY = pub.getFullYear(), pubM = pub.getMonth();
+  const {isHtml, blocks, siteHost} = parse(raw);
+  const body = blocks.map(b=>b.text).join('\n');
+  const sents = [];
+  blocks.forEach(b=>{ if(b.type==='p') splitSentences(b.text).forEach(s=>sents.push({s, block:b})); });
+  const totalWords = words(body).length;
+  $('#mode').textContent = raw.trim()? (isHtml?'Mode HTML : liens et titres détectés':'Mode texte : titres devinés, liens non visibles')+($('#domainOn').checked?' · renfort SEO/WordPress actif':' · mode générique') : '';
+  const R = {};
+
+  // 1. Expérience
+  {
+    const f=[]; let anon=0, named=0, metric=0;
+    sents.forEach(({s},i)=>{
+      if(!FIRST.test(s)) return;
+      const ctx = s+' '+(sents[i+1]?.s||'');
+      const tool = isToolNamed(ctx);
+      const hasMetric = /\d+[,.]?\d*\s?(s|ms|%|secondes?|minutes?|min|heures?|clics|visites|positions?|€|euros?|kg|g|°C|W|mAh|Go|Mo)\b|passé de|avant.*après|de \d+[,.]?\d* à \d+/i.test(ctx);
+      if(tool){named++; if(hasMetric) metric++; f.push({lvl:hasMetric?'good':'warn',k:(hasMetric?'Expérience nommée et chiffrée':'Outil nommé, sans mesure')+` · ${tool.name} (${tool.how})`,text:s});}
+      else {anon++; f.push({lvl:'bad',k:'Première personne, rien d\'identifiable',text:s});}
+    });
+    // En mode générique : combien de témoignages « anonymes » la liste du domaine aurait-elle reconnus ?
+    state.missedByGeneric = 0;
+    if(!$('#domainOn').checked){
+      const terms=$('#domainList').value.split('\n').map(x=>x.trim().toLowerCase()).filter(Boolean);
+      f.filter(x=>x.lvl==='bad').forEach(x=>{ const low=x.text.toLowerCase(); if(terms.some(t=>inText(t,low))) state.missedByGeneric++; });
+    }
+    let n, why;
+    if(!anon && !named){n=1; why="Aucun témoignage à la première personne : ce n'est pas un défaut, juste un manque d'information. Cherchez une capture, un cas client ou une donnée propre."}
+    else if(anon && !named){n=0; why=`${anon} témoignage(s) sans outil, produit ni site identifiable.`}
+    else if(metric && !anon){n=2; why="Outils nommés et résultats chiffrés."}
+    else {n=1; why=`${named} expérience(s) nommée(s), ${anon} anonyme(s), ${metric} chiffrée(s).`}
+    R.exp={suggest:n,reason:why,findings:dedupe(f)};
+  }
+
+  // 2. Sources
+  {
+    const f=[]; let stats=0, unlinked=0, hedgesBad=0;
+    const linksIn = (s,block) => block.links.filter(a=>s.includes(a.text)).map(a=>linkQuality(a.href,siteHost));
+    const bestLink = arr => arr.sort((a,b)=>a.w-b.w)[0];
+    sents.forEach(({s,block},i)=>{
+      const low=s.toLowerCase();
+      const hasStat=/\d+[,.]?\d*\s?%|\b\d+\s?(fois|millions?|milliards?)\b|\bx\d+\b/i.test(s);
+      const lq = bestLink(linksIn(s,block));
+      const linked = !!lq && lq.w<1;
+      const hedgeHit = HEDGES.find(h => low.includes(h));
+      if(hedgeHit){
+        const nx = sents[i+1];
+        const nq = nx && bestLink(linksIn(nx.s,nx.block));
+        const nextLinked = !!nq && nq.w<1;
+        if((linked || nextLinked) && /\d/.test(s)) f.push({lvl:'warn',k:'Nuance méthodologique (source liée)',text:s});
+        else { hedgesBad++; f.push({lvl:'bad',k:"Formule d'auto-protection",text:s}); }
       }
-
-      function analyze(){
-        const raw = $('#article').value;
-        const pub = new Date($('#pubdate').value || Date.now());
-        const pubY = pub.getFullYear(), pubM = pub.getMonth();
-        const {isHtml, blocks} = parse(raw);
-        const body = blocks.map(b=>b.text).join('\n');
-        const sents = [];
-        blocks.forEach(b=>{ if(b.type==='p') splitSentences(b.text).forEach(s=>sents.push({s, block:b})); });
-        const totalWords = words(body).length;
-        $('#mode').textContent = raw.trim()? (isHtml?'Mode HTML : liens et titres détectés':'Mode texte : titres devinés, liens non visibles') : '';
-        const R = {}; // id -> {suggest, reason, findings:[{lvl,k,text}]}
-
-        // 1. Expérience
-        {
-          const f=[]; let anon=0, named=0, metric=0;
-          sents.forEach(({s},i)=>{
-            if(!FIRST.test(s)) return;
-            const ctx = (s+' '+(sents[i+1]?.s||'')).toLowerCase();
-            const hasName = PLUGINS.some(p=>ctx.includes(p)) || /\b\d+\.\d+(\.\d+)?\b/.test(ctx);
-            const hasMetric = /(\d+[,.]?\d*\s?(s|ms|%|secondes?|clics|visites|positions?))|passé de|avant.*après/.test(ctx);
-            if(hasName){named++; if(hasMetric) metric++; f.push({lvl:hasMetric?'good':'warn',k:hasMetric?'Expérience nommée et chiffrée':'Outil nommé, sans mesure',text:s});}
-            else {anon++; f.push({lvl:'bad',k:'Première personne, outil jamais nommé',text:s});}
-          });
-          let n, why;
-          if(!anon && !named){n=1; why="Aucun témoignage à la première personne. Cherchez une capture, un cas client ou une donnée propre."}
-          else if(anon && !named){n=0; why=`${anon} témoignage(s) sans nom d'outil ni de site.`}
-          else if(metric && !anon){n=2; why="Outils nommés et résultats chiffrés."}
-          else {n=1; why=`${named} expérience(s) nommée(s), ${anon} anonyme(s), ${metric} chiffrée(s).`}
-          R.exp={suggest:n,reason:why,findings:f};
-        }
-
-        // 2. Sources
-        {
-          const f=[]; let stats=0, unlinked=0, hedges=0;
-          sents.forEach(({s,block})=>{
-            const low=s.toLowerCase();
-            const hasStat=/\d+[,.]?\d*\s?%|\b\d+\s?(fois|millions?|milliards?)\b|\bx\d+\b/i.test(s);
-            const brand=BRANDS.find(b=>new RegExp('\\b'+b+'\\b','i').test(low));
-            const linked = isHtml ? block.links.some(a=>s.includes(a)) : /https?:\/\//.test(s);
-            HEDGES.forEach(h=>{ if(low.includes(h)){hedges++; f.push({lvl:'bad',k:'Formule d\'auto-protection',text:s});} });
-            if(hasStat){
-              stats++;
-              if(!linked){unlinked++; f.push({lvl:brand?'warn':'bad',k:brand?`Chiffre attribué à ${brand[0].toUpperCase()+brand.slice(1)} sans lien`:'Chiffre sans source',text:s});}
-              else f.push({lvl:'good',k:'Chiffre avec lien',text:s});
-            }
-          });
-          let n, why;
-          if(!stats){n=1; why="Aucun chiffre détecté. Vérifiez les affirmations factuelles à la main."}
-          else if(unlinked===0 && !hedges){n=2; why=`${stats} chiffre(s), tous liés.`}
-          else if(unlinked/stats>0.5 || hedges>=2){n=0; why=`${unlinked} chiffre(s) sur ${stats} sans lien, ${hedges} formule(s) d'auto-protection.`}
-          else {n=1; why=`${unlinked} chiffre(s) sur ${stats} sans lien.`}
-          if(!isHtml && stats) why+=" En mode texte, les liens ne sont visibles que s'ils sont écrits en clair.";
-          R.src={suggest:n,reason:why,findings:dedupe(f)};
-        }
-
-        // 3. Temporel
-        {
-          const f=[]; let impossible=0, risky=0;
-          sents.forEach(({s})=>{
-            const low=s.toLowerCase();
-            (s.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
-              y=+y;
-              if(y>pubY){impossible++; f.push({lvl:'bad',k:`Année ${y} postérieure à la publication`,text:s}); return;}
-              if(y===pubY){
-                const m = MONTHS.findIndex(mo=>new RegExp(mo+'\\s+'+y).test(low));
-                if(m>pubM){impossible++; f.push({lvl:'bad',k:`${MONTHS[m]} ${y} est après la publication`,text:s});}
-                else if(FULLYEAR.test(s)){impossible++; f.push({lvl:'bad',k:`Données « annuelles » ${y} alors que l'année n'est pas finie`,text:s});}
-                else if(STUDY.test(s)){risky++; f.push({lvl:'warn',k:`Étude de l'année en cours (${y}) : vérifier qu'elle existe`,text:s});}
-              }
-            });
-          });
-          let n=impossible?0:(risky?1:2);
-          let why=impossible?`${impossible} date(s) impossible(s) au ${pub.toLocaleDateString('fr-FR')}.`:(risky?`${risky} référence(s) à des études de ${pubY} à vérifier.`:"Aucune date incohérente détectée.");
-          R.time={suggest:n,reason:why,findings:dedupe(f),impossible};
-        }
-
-        // 4. Structure
-        {
-          const f=[]; let thin=0;
-          const heads=[];
-          blocks.forEach((b,i)=>{ if(b.type==='h'){ let w=0; for(let j=i+1;j<blocks.length&&blocks[j].type!=='h';j++) w+=words(blocks[j].text).length; heads.push({t:b.text,w}); }});
-          heads.slice(1).forEach(h=>{ if(h.w<50 && !/conclusion/i.test(h.t)){thin++; f.push({lvl:'bad',k:`Section de ${h.w} mots`,text:h.t});} });
-          heads.forEach(h=>{ const m=h.t.match(/\b(\d+)\s+(outils|extensions|plugins|étapes|astuces|conseils|erreurs)\b/i); if(m) f.push({lvl:'warn',k:`Promet ${m[1]} ${m[2]} : compter les éléments`,text:h.t}); if(/\b(liste|top|comparatif)\b/i.test(h.t) && h.w<80) f.push({lvl:'bad',k:'Liste annoncée quasi vide',text:h.t}); });
-          const last=body.trim().slice(-1);
-          if(body.trim() && !/[.!?…»)\]]/.test(last)){f.push({lvl:'bad',k:'Fin de texte tronquée',text:body.trim().slice(-120)});}
-          const bad=f.filter(x=>x.lvl==='bad').length;
-          let n=bad>=2?0:(bad||f.length?1:2);
-          if(!heads.length){n=1;}
-          let why=heads.length?`${heads.length} titre(s) détecté(s), ${thin} section(s) de moins de 50 mots.`:"Aucun titre détecté. Collez le HTML pour une analyse fiable.";
-          R.struct={suggest:n,reason:why,findings:dedupe(f)};
-        }
-
-        // 5. Densité
-        {
-          const f=[]; let cl=0;
-          sents.forEach(({s})=>{ const low=s.toLowerCase(); const hit=CLICHES.find(c=>low.includes(c)); if(hit){cl++; f.push({lvl:'warn',k:`Formule creuse : ${hit}`,text:s});} });
-          const long=sents.map(x=>x.s).filter(s=>words(s).length>=8);
-          const sets=long.map(s=>new Set(words(s.toLowerCase()).filter(w=>w.length>3)));
-          let rep=0;
-          for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
-            const a=sets[i],b=sets[j]; let inter=0; a.forEach(w=>{if(b.has(w))inter++;});
-            const jac=inter/(a.size+b.size-inter||1);
-            if(jac>=0.5){rep++; f.push({lvl:'bad',k:`Phrase répétée (similarité ${Math.round(jac*100)} %)`,text:long[j]});}
-          }
-          const per1k = totalWords? (cl+rep*2)/totalWords*1000 : 0;
-          let n = per1k>=12?0:(per1k>=4?1:2);
-          if(!totalWords) n=1;
-          R.dens={suggest:n,reason:`${cl} formule(s) creuse(s), ${rep} répétition(s) pour ${totalWords} mots.`,findings:dedupe(f)};
-        }
-
-        // 6. Auteur : manuel
-        R.auth={suggest:authScore(),reason:"Non détectable dans le texte : cochez ce que vous avez vérifié sur le site.",findings:[],manual:true};
-
-        state.auto=R;
-        state.notes={};
-        $('#stats').innerHTML = raw.trim()? `<span><b>${totalWords}</b> mots</span><span><b>${sents.length}</b> phrases</span><span><b>${blocks.filter(b=>b.type==='h').length}</b> titres</span>` : '';
-        const e1=$('#e1'); e1.checked = R.time.impossible>0; $('#e1tag').hidden = !(R.time.impossible>0);
-        renderCriteria(); update();
+      if(hasStat){
+        stats++;
+        if(lq && lq.w===0){ f.push({lvl:'good',k:'Chiffre avec lien vers la source',text:s}); return; }
+        if(lq && lq.w===.5){ unlinked+=.5; f.push({lvl:'warn',k:`Chiffre avec ${lq.k} (compte pour moitié)`,text:s}); return; }
+        unlinked++;
+        const src = isBrandCited(s);
+        const pre = lq ? `Chiffre avec ${lq.k}` : 'Chiffre';
+        f.push(src ? {lvl: lq?'bad':'warn',k:`${pre} : attribué à ${src.name}${lq?'':' sans lien'} (${src.how})`,text:s} : {lvl:'bad',k:lq?`${pre}, sans source nommée`:'Chiffre sans source nommée',text:s});
       }
+    });
+    let n, why;
+    if(!stats){n=1; why="Aucun chiffre détecté : vérifiez les affirmations factuelles à la main."}
+    else if(unlinked===0 && hedgesBad===0){n=2; why=`${stats} chiffre(s), tous liés à leur source.`}
+    else if(unlinked/stats>0.5 || hedgesBad>=2){n=0; why=`${fmt(unlinked)}/${stats} chiffre(s) sans lien valable, ${hedgesBad} formule(s) d'auto-protection.`}
+    else {n=1; why=`${fmt(unlinked)}/${stats} chiffre(s) sans lien valable, ${hedgesBad} formule(s) d'auto-protection.`}
+    R.src={suggest:n,reason:why,findings:dedupe(f)};
+  }
 
-      function dedupe(f){const seen=new Set();return f.filter(x=>{const k=x.k+'|'+x.text;if(seen.has(k))return false;seen.add(k);return true;});}
-      function authScore(){const c=state.auth.filter(Boolean).length;return c>=4?2:(c>=2?1:0);}
-      function noteOf(id){return state.notes[id]!==undefined?state.notes[id]:state.auto[id]?.suggest??1;}
-
-      const AUTH_CHECKS=["Auteur nommé, avec photo ou bio","Profil vérifiable ailleurs (LinkedIn, conférences, autres publications)","Mentions légales et coordonnées sur le site","Ligne éditoriale cohérente sur le SEO ou WordPress"];
-
-      function renderCriteria(){
-        const box=$('#criteria'); box.innerHTML='';
-        CRITERIA.forEach((c,idx)=>{
-          const a=state.auto[c.id]||{findings:[],reason:''};
-          const el=document.createElement('article'); el.className='crit'; el.id='c-'+c.id;
-          const findings=a.findings.slice(0,8).map(x=>`<li class="${x.lvl}"><span class="k">${esc(x.k)}</span><q>${esc(cut(x.text))}</q></li>`).join('');
-          const more=a.findings.length>8?`<details><summary>${a.findings.length-8} autre(s) signal(aux)</summary><ul class="findings" style="margin-top:6px">${a.findings.slice(8).map(x=>`<li class="${x.lvl}"><span class="k">${esc(x.k)}</span><q>${esc(cut(x.text))}</q></li>`).join('')}</ul></details>`:'';
-          const manual = a.manual? `<div class="manual">${AUTH_CHECKS.map((t,i)=>`<label class="check"><input type="checkbox" id="auth${i}" ${state.auth[i]?'checked':''}><span>${t}</span></label>`).join('')}</div>`:'';
-          el.innerHTML=`
-            <div class="crit-head">
-              <h3>${idx+1}. ${c.name}</h3>
-              <div class="row" style="gap:12px">
-                <label class="weight" for="w-${c.id}">poids <input type="number" id="w-${c.id}" min="0" max="100" value="${state.weights[c.id]}"></label>
-                <span class="pts" id="pts-${c.id}"></span>
-              </div>
-            </div>
-            <div class="row" style="justify-content:space-between">
-              <div class="seg" role="group" aria-label="Note ${c.name}">
-                ${[0,1,2].map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join('')}
-              </div>
-              <span class="suggest" id="sug-${c.id}"></span>
-            </div>
-            <p class="hint">${esc(a.reason)} <em>${c.q}</em></p>
-            ${manual}
-            ${findings?`<ul class="findings">${findings}</ul>`:''}${more}`;
-          box.appendChild(el);
-          el.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.notes[c.id]=+b.dataset.v;update();}));
-          el.querySelector('#w-'+c.id).addEventListener('input',e=>{state.weights[c.id]=Math.max(0,+e.target.value||0);update();});
-          if(a.manual) AUTH_CHECKS.forEach((_,i)=>el.querySelector('#auth'+i).addEventListener('change',e=>{state.auth[i]=e.target.checked;state.auto.auth.suggest=authScore();update();}));
-        });
-      }
-
-      function compute(){
-        let raw=0, totalW=0; const parts=[];
-        CRITERIA.forEach(c=>{const n=noteOf(c.id),w=state.weights[c.id];totalW+=w;const p=n/2*w;raw+=p;parts.push({c,n,w,p});});
-        const scaled = totalW? raw/totalW*100 : 0;
-        const elim=['#e1','#e2','#e3'].some(s=>$(s).checked);
-        const score = elim? Math.min(40,scaled) : scaled;
-        return {parts,raw,totalW,scaled,score,elim};
-      }
-      const fmt=x=>(Math.round(x*10)/10).toLocaleString('fr-FR');
-
-      function update(){
-        const r=compute();
-        r.parts.forEach(({c,n,p})=>{
-          const el=$('#c-'+c.id); if(!el) return;
-          el.dataset.n=n;
-          el.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===n?'true':'false'));
-          $('#pts-'+c.id).textContent=fmt(p)+' pts';
-          const s=state.auto[c.id]?.suggest;
-          $('#sug-'+c.id).innerHTML = s===undefined?'' : (state.notes[c.id]!==undefined && state.notes[c.id]!==s ? `Suggestion : <b>${s}</b> · corrigée à la main` : `Suggestion : <b>${s}</b>`);
-        });
-        const sc=Math.round(r.score*10)/10;
-        $('#scoreNum').textContent=fmt(sc);
-        const lvl = sc>=75?'good':(sc>=50?'warn':'bad');
-        const col = {good:'var(--good)',warn:'var(--warn)',bad:'var(--bad)'}[lvl];
-        const g=$('#gaugeVal'); g.style.stroke=col; g.style.strokeDashoffset=326.7*(1-sc/100);
-        $('#pill').className='pill '+lvl;
-        $('#pillTxt').textContent={good:'Fiable',warn:'À vérifier',bad:'Suspect'}[lvl];
-        $('#verdictTxt').textContent = {good:"À citer, à intégrer en veille ou en formation.",warn:"Utile pour repérer des pistes : recoupez chaque chiffre avant de l'utiliser.",bad:"Contenu de remplissage : scannez les mots-clés, n'en retenez rien."}[lvl] + (r.elim?" Plafond de 40 appliqué (critère éliminatoire).":"");
-        $('#formula').textContent = r.parts.map(({n,w})=>`${n}/2×${w}`).join(' + ') + ` = ${fmt(r.raw)}` + (r.totalW!==100?` → ramené sur 100 (poids total ${r.totalW}) = ${fmt(r.scaled)}`:'') + (r.elim?` → plafond 40`:'');
-      }
-
-      function report(){
-        const r=compute(); const d=new Date($('#pubdate').value).toLocaleDateString('fr-FR');
-        const first=($('#article').value.split('\n').find(l=>l.trim())||'').replace(/<[^>]+>/g,'').trim();
-        let t=`AUDIT E-E-A-T — ${cut(first,90)}\nPublié le ${d} · audité le ${new Date().toLocaleDateString('fr-FR')}\n\nScore : ${fmt(r.score)}/100 — ${$('#pillTxt').textContent}\n`;
-        if(r.elim) t+=`Critère éliminatoire : ${[['#e1','date impossible'],['#e2','statistique introuvable'],['#e3','faux témoignage']].filter(([s])=>$(s).checked).map(x=>x[1]).join(', ')} (plafond 40)\n`;
-        t+='\n';
-        r.parts.forEach(({c,n,w,p})=>{
-          const a=state.auto[c.id];
-          t+=`${c.name} — ${n}/2 × ${w} = ${fmt(p)} pts\n  ${a?.reason||''}\n`;
-          (a?.findings||[]).filter(x=>x.lvl!=='good').slice(0,3).forEach(x=>t+=`  • ${x.k} : « ${cut(x.text,110)} »\n`);
-        });
-        return t;
-      }
-
-      $('#copy').addEventListener('click',()=>{
-        const t=report(), toast=$('#toast');
-        const done=()=>{toast.textContent='Rapport copié';setTimeout(()=>toast.textContent='',2500);};
-        try{ navigator.clipboard.writeText(t).then(done).catch(fallback); }catch(e){fallback();}
-        function fallback(){const ta=$('#article');const keep=ta.value;ta.value=t;ta.select();toast.textContent='Rapport sélectionné dans le champ : copiez-le (Ctrl+C), puis rechargez l\'article';ta.dataset.keep=keep;}
+  // 3. Temporel
+  {
+    const f=[]; let impossible=0, risky=0;
+    sents.forEach(({s})=>{
+      const low=s.toLowerCase();
+      (s.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
+        y=+y;
+        if(y>pubY){impossible++; f.push({lvl:'bad',k:`Année ${y} postérieure à la publication`,text:s}); return;}
+        if(y===pubY){
+          const m = MONTHS.findIndex(mo=>new RegExp(mo+'\\s+'+y).test(low));
+          if(m>pubM){impossible++; f.push({lvl:'bad',k:`${MONTHS[m]} ${y} est après la publication`,text:s});}
+          else if(FULLYEAR.test(s)){impossible++; f.push({lvl:'bad',k:`Données « annuelles » ${y} avant la fin de l'année`,text:s});}
+          else if(STUDY.test(s)){risky++; f.push({lvl:'warn',k:`Étude de ${y} à vérifier`,text:s});}
+        }
       });
-      ['#e1','#e2','#e3'].forEach(s=>$(s).addEventListener('change',()=>{ if(s==='#e1') $('#e1tag').hidden=true; update(); }));
-      $('#run').addEventListener('click',analyze);
-      $('#pubdate').addEventListener('change',analyze);
-      $('#sample').addEventListener('click',()=>{$('#article').value=SAMPLE;$('#pubdate').value='2026-09-25';analyze();});
-      $('#clear').addEventListener('click',()=>{$('#article').value='';analyze();$('#article').focus();});
+    });
+    const n=impossible?0:(risky?1:2);
+    const why=impossible?`${impossible} date(s) impossible(s) au ${pub.toLocaleDateString('fr-FR')}.`:(risky?`${risky} étude(s) de ${pubY} à vérifier.`:"Aucune incohérence temporelle.");
+    R.time={suggest:n,reason:why,findings:dedupe(f),impossible};
+  }
 
-      $('#article').value=SAMPLE;
-      analyze();
-    </script>
-  </body>
-</html>
+  // 4. Structure
+  {
+    const f=[]; let thin=0; const heads=[];
+    blocks.forEach((b,i)=>{ if(b.type==='h'){ let w=0; for(let j=i+1;j<blocks.length&&blocks[j].type!=='h';j++) w+=words(blocks[j].text).length; heads.push({t:b.text,w}); }});
+    const headsReal = heads.filter(h => !/^(sommaire|table des mati|publications? similaires?|articles? (similaires|r[ée]cents?|li[ée]s)|à lire aussi|commentaires?|laisser un commentaire|partager|r[ée]sum[ée] de l'article|[àa] propos de l'auteur)/i.test(h.t.trim()));
+    headsReal.slice(1).forEach(h=>{ if(h.w<50 && !/conclusion/i.test(h.t)){thin++; f.push({lvl:'bad',k:`Section de ${h.w} mots`,text:h.t});} });
+    headsReal.forEach(h=>{
+      const m=h.t.match(/\b(\d+)\s+(outils|extensions|plugins|étapes|astuces|conseils|erreurs|recettes|modèles|produits)\b/i);
+      if(m) f.push({lvl:'warn',k:`Promet ${m[1]} ${m[2]} : compter les éléments`,text:h.t});
+      if(/\b(liste|top|comparatif)\b/i.test(h.t) && h.w<80) f.push({lvl:'bad',k:'Liste annoncée quasi vide',text:h.t});
+    });
+    if(body.trim() && !/[.!?…»)\]]$/.test(body.trim())) f.push({lvl:'bad',k:'Fin de texte tronquée',text:body.trim().slice(-120)});
+    const bad=f.filter(x=>x.lvl==='bad').length;
+    let n=bad>=2?0:(bad||f.length?1:2);
+    if(!headsReal.length) n=1;
+    const why=headsReal.length?`${headsReal.length} section(s), ${thin} de moins de 50 mots.`:"Aucun titre de contenu détecté.";
+    R.struct={suggest:n,reason:why,findings:dedupe(f)};
+  }
+
+  // 5. Densité
+  {
+    const f=[]; let cl=0, fill=0; const dom=domainClicheRes();
+    sents.forEach(({s})=>{
+      const hit=CLICHE_RE.find(([,re])=>re.test(s));
+      if(hit){cl++; f.push({lvl:'warn',k:`Formule creuse : ${hit[0]}`,text:s}); return;}
+      const dh=dom.find(([,re])=>re.test(s));
+      if(dh){cl++; f.push({lvl:'warn',k:`Formule creuse du domaine : ${dh[0]}`,text:s}); return;}
+      const fh=FILLER_RE.find(([,re])=>re.test(s));
+      if(fh){fill++; f.push({lvl:'info',k:`Connecteur banal (¼ de poids) : ${fh[0]}`,text:s});}
+    });
+    const long=sents.map(x=>x.s).filter(s=>words(s).length>=8);
+    const sets=long.map(s=>new Set(words(s.toLowerCase()).filter(w=>w.length>3)));
+    let rep=0;
+    for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
+      let inter=0; sets[i].forEach(w=>{if(sets[j].has(w))inter++;});
+      const jac=inter/(sets[i].size+sets[j].size-inter||1);
+      if(jac>=0.5){rep++; f.push({lvl:'bad',k:`Phrase répétée (similarité ${Math.round(jac*100)} %)`,text:long[j]});}
+    }
+    const per1k = totalWords? (cl + fill*0.25 + rep*2)/totalWords*1000 : 0;
+    let n = per1k>=12?0:(per1k>=4?1:2);
+    if(!totalWords) n=1;
+    f.sort((a,b)=>({bad:0,warn:1,info:2}[a.lvl]-({bad:0,warn:1,info:2}[b.lvl])));
+    R.dens={suggest:n,reason:`${cl} formule(s) creuse(s), ${fill} connecteur(s) banal(s), ${rep} répétition(s) pour ${totalWords} mots (indice ${Math.round(per1k*10)/10} pour 1 000 mots).`,findings:dedupe(f)};
+  }
+
+  // 6. Auteur
+  state.auth = detectAuthorSignals(raw);
+  R.auth={suggest:authScore(),reason:"Détection dans le HTML (itemprop, rel=author, sameAs, mentions légales). Cochez ou décochez selon votre vérification.",findings:[],manual:true};
+
+  state.auto=R; state.notes={};
+  $('#stats').innerHTML = raw.trim()? `<span><b>${totalWords}</b> mots</span><span><b>${sents.length}</b> phrases</span><span><b>${blocks.filter(b=>b.type==='h').length}</b> titres</span>` : '';
+  $('#e1').checked = R.time.impossible>0; $('#e1tag').hidden = !(R.time.impossible>0);
+  renderCriteria(); update();
+}
+
+function dedupe(f){const seen=new Set();return f.filter(x=>{const k=x.k+'|'+x.text;if(seen.has(k))return false;seen.add(k);return true;});}
+function authScore(){const c=state.auth.filter(Boolean).length;return c>=4?2:(c>=2?1:0);}
+function noteOf(id){return state.notes[id]!==undefined?state.notes[id]:state.auto[id]?.suggest??1;}
+const AUTH_CHECKS=["Auteur nommé, avec photo ou bio","Profil vérifiable ailleurs (LinkedIn, profil WordPress.org…)","Mentions légales et coordonnées","Ligne éditoriale cohérente avec le sujet"];
+
+function li(x){return `<li class="${x.lvl}"><span class="k">${esc(x.k)}</span><q>${esc(cut(x.text))}</q></li>`;}
+function renderCriteria(){
+  const box=$('#criteria'); box.innerHTML='';
+  CRITERIA.forEach((c,idx)=>{
+    const a=state.auto[c.id]||{findings:[],reason:''};
+    const el=document.createElement('article'); el.className='crit'; el.id='c-'+c.id;
+    const shown=a.findings.slice(0,8).map(li).join('');
+    const more=a.findings.length>8?`<details class="more"><summary>${a.findings.length-8} autre(s) signal(aux)</summary><ul class="findings" style="margin-top:6px">${a.findings.slice(8).map(li).join('')}</ul></details>`:'';
+    const manual = a.manual? `<div class="manual">${AUTH_CHECKS.map((t,i)=>`<label class="check"><input type="checkbox" id="auth${i}" ${state.auth[i]?'checked':''}><span>${t}</span></label>`).join('')}</div>`:'';
+    el.innerHTML=`
+      <div class="crit-head"><h3>${idx+1}. ${c.name}</h3><div class="row" style="gap:12px">
+        <label class="weight" for="w-${c.id}">poids <input type="number" id="w-${c.id}" min="0" max="100" value="${state.weights[c.id]}"></label>
+        <span class="pts" id="pts-${c.id}"></span>
+      </div></div>
+      <div class="row" style="justify-content:space-between">
+        <div class="seg" role="group" aria-label="Note ${c.name}">${[0,1,2].map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join('')}</div>
+        <span class="suggest" id="sug-${c.id}"></span>
+      </div>
+      <p class="hint">${esc(a.reason)} <em>${c.q}</em></p>
+      ${manual}${shown?`<ul class="findings">${shown}</ul>`:''}${more}`;
+    box.appendChild(el);
+    el.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.notes[c.id]=+b.dataset.v;update();}));
+    el.querySelector('#w-'+c.id).addEventListener('input',e=>{state.weights[c.id]=Math.max(0,+e.target.value||0);update();});
+    if(a.manual) AUTH_CHECKS.forEach((_,i)=>el.querySelector('#auth'+i).addEventListener('change',e=>{state.auth[i]=e.target.checked;state.auto.auth.suggest=authScore();update();}));
+  });
+}
+
+function compute(){
+  let raw=0, totalW=0; const parts=[];
+  CRITERIA.forEach(c=>{const n=noteOf(c.id),w=state.weights[c.id];totalW+=w;const p=n/2*w;raw+=p;parts.push({c,n,w,p});});
+  const scaled = totalW? raw/totalW*100 : 0;
+  const elim=['#e1','#e2','#e3'].some(s=>$(s).checked);
+  return {parts,raw,totalW,scaled,score:elim?Math.min(40,scaled):scaled,elim};
+}
+const fmt=x=>(Math.round(x*10)/10).toLocaleString('fr-FR');
+
+function update(){
+  const r=compute();
+  r.parts.forEach(({c,n,p})=>{
+    const el=$('#c-'+c.id); if(!el) return;
+    el.dataset.n=n;
+    el.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===n?'true':'false'));
+    $('#pts-'+c.id).textContent=fmt(p)+' pts';
+    const s=state.auto[c.id]?.suggest;
+    $('#sug-'+c.id).innerHTML = s===undefined?'' : (state.notes[c.id]!==undefined && state.notes[c.id]!==s ? `Suggestion : <b>${s}</b> · corrigée à la main` : `Suggestion : <b>${s}</b>`);
+  });
+  const sc=Math.round(r.score*10)/10;
+  $('#scoreNum').textContent=fmt(sc);
+  const lvl = sc>=75?'good':(sc>=50?'warn':'bad');
+  const g=$('#gaugeVal'); g.style.stroke={good:'var(--good)',warn:'var(--warn)',bad:'var(--bad)'}[lvl]; g.style.strokeDashoffset=326.7*(1-sc/100);
+  $('#pill').className='pill '+lvl;
+  $('#pillTxt').textContent={good:'Fiable',warn:'À vérifier',bad:'Suspect'}[lvl];
+  $('#verdictTxt').textContent = {good:"À citer, à intégrer en veille ou en formation.",warn:"Utile pour repérer des pistes : recoupez chaque chiffre.",bad:"Contenu de remplissage : scannez les mots-clés, n'en retenez rien."}[lvl] + (r.elim?" Plafond de 40 appliqué.":"");
+  $('#formula').textContent = r.parts.map(({n,w})=>`${n}/2×${w}`).join(' + ') + ` = ${fmt(r.raw)}` + (r.totalW!==100?` → ramené sur 100 (poids total ${r.totalW}) = ${fmt(r.scaled)}`:'') + (r.elim?' → plafond 40':'');
+  const text=$('#article').value.trim(), av=[];
+  if(text){
+    if(state.notes.auth===undefined && !state.auth.some(Boolean)) av.push("Critère 6 non évalué : aucun signal auteur trouvé, cochez ce que vous avez vérifié.");
+    if(!/</.test(text)) av.push("Mode texte : liens invisibles, le critère 2 est sous-évalué.");
+    if(state.missedByGeneric) av.push(`Mode générique : ${state.missedByGeneric} témoignage(s) citent un outil que seule la liste du domaine reconnaît (nom écrit en minuscules). Activez le renfort pour en tenir compte.`);
+  }
+  const wb=$('#warnbox'); wb.hidden=!av.length; wb.textContent=av.join(' ');
+}
+
+function report(){
+  const r=compute(); const d=new Date($('#pubdate').value).toLocaleDateString('fr-FR');
+  let t=`AUDIT E-E-A-T — publié le ${d} · audité le ${new Date().toLocaleDateString('fr-FR')}\n`;
+  const sk=$('#sample').value; if(sk && SAMPLES[sk]) t+=`ATTENTION : article d'essai fictif, ce rapport n'est pas un audit réel. ${SAMPLES[sk].expect}\n`;
+  t+=`Mode : ${$('#domainOn').checked?'renfort SEO/WordPress':'générique'}\nScore : ${fmt(r.score)}/100 — ${$('#pillTxt').textContent}\n`;
+  if(r.elim) t+=`Critère éliminatoire : ${[['#e1','date impossible'],['#e2','statistique introuvable'],['#e3','faux témoignage']].filter(([s])=>$(s).checked).map(x=>x[1]).join(', ')} (plafond 40)\n`;
+  t+='\n';
+  r.parts.forEach(({c,n,w,p})=>{
+    const a=state.auto[c.id];
+    t+=`${c.name} — ${n}/2 × ${w} = ${fmt(p)} pts\n  ${a?.reason||''}\n`;
+    (a?.findings||[]).filter(x=>x.lvl==='bad'||x.lvl==='warn').slice(0,3).forEach(x=>t+=`  • ${x.k} : « ${cut(x.text,110)} »\n`);
+  });
+  if($('#warnbox').textContent) t+=`\nLimites : ${$('#warnbox').textContent}\n`;
+  return t;
+}
+
+// ---------- Articles d'essai (fictifs, pour vérifier l'universalité) ----------
+const SAMPLES = {
+seoFake:{expect:"Article d'essai : faux expert SEO, écrit pour échouer. Un score proche de 0 est le résultat attendu, pas une panne.",date:'2026-09-25',domain:true,html:`<h2>Pourquoi le GEO change tout</h2>
+<p>Dans le paysage actuel du SEO, il est crucial de comprendre que la visibilité ne se joue plus seulement sur Google. Selon SparkToro, 68 % des recherches se terminent sans clic. Le chiffre exact varie selon les études, mais la tendance est claire. D'après l'étude Semrush sur l'ensemble des données 2026, les marques citées par les IA gagnent 35 % de clics organiques en plus. À traiter comme un ordre de grandeur, la méthodologie exacte n'est pas détaillée.</p>
+<h2>Les critères E-E-A-T</h2>
+<p>J'ai testé cette extension pendant deux mois et les résultats ont été spectaculaires. J'ai renoncé à cette extension après plusieurs semaines car elle ralentissait le site. La méthode transforme la stratégie en acte. Il est essentiel de démontrer son expertise pour gagner la confiance des moteurs.</p>
+<p>L'expérience est au cœur de toute stratégie SEO efficace. Il est essentiel de démontrer son expertise pour gagner la confiance des moteurs de recherche.</p>
+<h2>Liste des outils SEO GEO WordPress</h2>
+<p>Commencez par observer les SERP de Google et le bloc Autres questions.</p>
+<h2>Conclusion</h2>
+<p>En somme, le GEO est un levier incontournable qui n'est plus une option. Dans un monde où l'IA redéfinit la recherche, optimiser votre visibilité est plus que jamais la pierre angulaire de votre succès</p>`},
+seoGood:{expect:"Article d'essai fictif, écrit pour avoir la forme d'un bon article. Son lien pointe vers example.org, un domaine de démonstration : la page le signale et le chiffre ne compte pas comme sourcé. Le reste (auteur, mesures) est inventé et la page ne peut pas le savoir.",date:'2025-09-10',domain:true,html:`<article><div class="entry-content">
+<h2>Six mois de WP Rocket sur une boutique WooCommerce</h2>
+<p>Sur une boutique de 1 200 produits, j'ai activé WP Rocket 3.15 en mars 2025. Le LCP mobile est passé de 3,2 s à 1,8 s en dix jours, mesuré dans Search Console sur les 28 jours glissants.</p>
+<p>Selon le <a href="https://example.org/web-almanac">Web Almanac de HTTP Archive</a>, 42 % des sites WordPress dépassent 2,5 s de LCP mobile. L'échantillon couvre plusieurs millions de pages d'accueil, ce qui en fait une base de comparaison solide pour une boutique comme celle-ci.</p>
+<h2>Ce qui a cassé, et comment je l'ai réparé</h2>
+<p>La mise en cache a cassé le panier sur deux thèmes : il a fallu exclure les pages panier et commande du cache, puis vider le cache du CDN. Je conseille de tester sur une copie de préproduction avant tout déploiement, avec une sauvegarde complète des fichiers et de la base de données, et de noter les réglages modifiés un par un.</p>
+<h2>Ce que je ferais différemment</h2>
+<p>J'aurais commencé par compresser les images avec ShortPixel, car elles pesaient plus de la moitié de chaque page produit. Le gain aurait été plus rapide et sans risque pour le panier. J'aurais aussi mesuré les Core Web Vitals pendant quatre semaines avant de toucher au cache, pour disposer d'une base de comparaison propre.</p>
+</div></article>
+<div class="author-box" itemprop="author" itemscope><img class="avatar" src="data:," alt=""><span itemprop="name">Marie Dupont</span><a itemprop="sameAs" href="https://www.linkedin.com/in/exemple">LinkedIn</a></div>
+<footer><a href="/mentions-legales">Mentions légales</a> <a rel="category tag" href="/category/wordpress">WordPress</a></footer>`},
+cookGood:{expect:"Article d'essai fictif hors SEO, en mode générique. Son lien de démonstration est signalé et il n'a pas de balisage auteur : le score baisse en conséquence.",date:'2026-03-02',domain:false,html:`<div class="entry-content">
+<h2>Deux mois avec le Thermomix TM6</h2>
+<p>J'ai testé le Thermomix TM6 pendant deux mois pour la pâte brisée et les soupes de la semaine. Le pétrissage passe de 12 minutes à la main à 2 minutes au robot, pour un résultat plus régulier mais une pâte un peu plus élastique.</p>
+<p>D'après une <a href="https://example.org/enquete-cuisine">enquête de l'Observatoire des usages culinaires</a>, 31 % des foyers équipés d'un robot cuiseur l'utilisent moins d'une fois par semaine. C'est un chiffre à garder en tête avant de dépenser plus de 1 000 €.</p>
+<h2>Les limites que j'ai rencontrées</h2>
+<p>Le bol de 2,2 litres est trop petit pour une soupe de six personnes : il faut cuire en deux fois, ce qui annule le gain de temps. La cuisson des légumes en morceaux reste inégale au-delà de 800 g, et le nettoyage des lames prend autant de temps qu'une casserole. Pour une famille de quatre, je le recommande surtout pour les pâtes et les sauces émulsionnées.</p>
+</div>`},
+cookFake:{expect:"Article d'essai hors SEO : faux test. Score attendu : bas (autour de 15).",date:'2026-03-02',domain:false,html:`<div class="entry-content">
+<h2>Le robot cuiseur : un indispensable</h2>
+<p>De nos jours, il est essentiel de gagner du temps en cuisine. J'ai testé ce robot pendant deux mois et les résultats ont été bluffants. Selon certaines études, 70 % des cuisiniers amateurs gagnent une heure par jour grâce à un robot.</p>
+<h2>Top 10 des robots cuiseurs</h2>
+<p>Choisissez un modèle adapté à vos besoins.</p>
+<h2>Conclusion</h2>
+<p>En conclusion, le robot cuiseur est un véritable levier pour libérer tout le potentiel de votre cuisine. Il est essentiel de gagner du temps en cuisine au quotidien.</p>
+</div>`}
+};
+
+SAMPLES.cookGoodSeo = {expect:"Le même article de cuisine, avec le renfort SEO/WordPress activé. Le score doit être identique à la version générique : le renfort ajoute des détections, il n'en retire aucune.", date:SAMPLES.cookGood.date, domain:true, html:SAMPLES.cookGood.html};
+
+function loadSample(key){
+  const s=SAMPLES[key]; const note=$('#sampleNote');
+  if(!s){ note.hidden=true; return; }
+  note.textContent=s.expect; note.hidden=false;
+  $('#article').value=s.html; $('#pubdate').value=s.date; $('#domainOn').checked=s.domain; analyze();
+}
+
+$('#domainList').value = DOMAIN_SEO.join('\n');
+$('#domainCliches').value = DOMAIN_SEO_CLICHES.join('\n');
+$('#copy').addEventListener('click',()=>{
+  const t=report(), toast=$('#toast');
+  const done=()=>{toast.textContent='Rapport copié';setTimeout(()=>toast.textContent='',2500);};
+  const fallback=()=>{toast.textContent="Copie refusée par le navigateur : le rapport est dans le champ de l'article, copiez-le puis rechargez l'article.";$('#article').value=t;$('#article').select();};
+  try{ navigator.clipboard.writeText(t).then(done,fallback); }catch(e){ fallback(); }
+});
+['#e1','#e2','#e3'].forEach(s=>$(s).addEventListener('change',()=>{ if(s==='#e1') $('#e1tag').hidden=true; update(); }));
+$('#run').addEventListener('click',()=>{ analyze(); });
+$('#article').addEventListener('input',()=>{ if($('#sample').value){ $('#sample').value=''; $('#sampleNote').hidden=true; } });
+$('#pubdate').addEventListener('change',analyze);
+$('#domainOn').addEventListener('change',analyze);
+$('#domainList').addEventListener('change',analyze);
+$('#domainCliches').addEventListener('change',analyze);
+$('#sample').addEventListener('change',e=>loadSample(e.target.value));
+$('#clear').addEventListener('click',()=>{$('#article').value='';$('#sample').value='';$('#sampleNote').hidden=true;analyze();$('#article').focus();});
+
+$('#sample').value='seoGood'; loadSample('seoGood');
+</script>
+
+</body></html>
