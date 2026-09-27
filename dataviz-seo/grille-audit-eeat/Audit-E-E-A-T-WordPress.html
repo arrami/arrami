@@ -1,0 +1,459 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <style>
+      :root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}
+    </style>
+  </head>
+  <body>
+    <title>Audit E-E-A-T WordPress</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Instrument+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" />
+    <style>
+      :root{
+        --bg:#F2F5F4;--surface:#FFFFFF;--sunk:#E9EEEC;--ink:#16201F;--muted:#586866;--line:#D5DDDB;
+        --accent:#0E6B63;--accent-ink:#FFFFFF;--accent-soft:#DCEDEA;
+        --good:#2E7D32;--good-soft:#E3F1E4;--warn:#9A6414;--warn-soft:#F7ECD9;--bad:#B63326;--bad-soft:#F7E0DD;
+        --display:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;
+        --body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+        --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+      }
+      @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+        color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
+        --accent:#4DB6A9;--accent-ink:#0B1413;--accent-soft:#1B3431;
+        --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}}
+      :root[data-theme="dark"]{
+        color-scheme:dark;--bg:#0F1514;--surface:#17201F;--sunk:#1F2A28;--ink:#E4ECEA;--muted:#97A7A4;--line:#2B3836;
+        --accent:#4DB6A9;--accent-ink:#0B1413;--accent-soft:#1B3431;
+        --good:#6CC477;--good-soft:#1C3120;--warn:#E3AE55;--warn-soft:#3A2D16;--bad:#F07A69;--bad-soft:#3E1F1B;}
+      *{box-sizing:border-box}
+      body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--body);padding-inline:16px;padding-block:24px 48px}
+      .wrap{max-width:1180px;margin:0 auto;display:grid;gap:20px}
+      header{display:grid;gap:6px}
+      h1{font:700 clamp(26px,4vw,36px)/1.1 var(--display);margin:0;text-wrap:balance;letter-spacing:-.01em}
+      .lede{color:var(--muted);margin:0;max-width:70ch}
+      .layout{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:20px;align-items:start}
+      @media (max-width:880px){.layout{grid-template-columns:1fr}}
+      .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:18px;display:grid;gap:14px}
+      .input-panel{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+      @media (max-width:880px){.input-panel{position:static}}
+      label.lbl,.lbl{font:600 11px/1 var(--body);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+      .field{display:grid;gap:6px}
+      input[type=date],input[type=number],textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px 10px}
+      textarea{min-height:360px;resize:vertical;font:13px/1.5 var(--mono)}
+      input:focus-visible,textarea:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+      .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+      button{font:600 14px/1 var(--body);border-radius:6px;padding:10px 14px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+      button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+      button:hover{filter:brightness(1.05)}
+      .hint{font-size:13px;color:var(--muted);margin:0}
+      .mode{font:500 12px/1 var(--mono);color:var(--muted)}
+
+      /* Score */
+      .score{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+      @media (max-width:520px){.score{grid-template-columns:1fr}}
+      .gauge{width:128px;height:128px;position:relative}
+      .gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
+      .gauge .num{position:absolute;inset:0;display:grid;place-content:center;text-align:center}
+      .gauge .num b{font:700 38px/1 var(--display);font-variant-numeric:tabular-nums}
+      .gauge .num span{font:500 12px/1 var(--mono);color:var(--muted);margin-top:4px}
+      .verdict{display:grid;gap:8px}
+      .pill{display:inline-flex;align-items:center;gap:6px;font:600 13px/1 var(--body);padding:6px 10px;border-radius:999px;width:fit-content}
+      .pill.good{background:var(--good-soft);color:var(--good)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+      .pill i{width:8px;height:8px;border-radius:50%;background:currentColor}
+      .verdict p{margin:0;color:var(--muted);font-size:14px}
+      .formula{font:12px/1.5 var(--mono);color:var(--muted);background:var(--sunk);padding:8px 10px;border-radius:6px;overflow-x:auto;white-space:nowrap}
+
+      /* Eliminatoires */
+      .elim{display:grid;gap:8px;border-top:1px solid var(--line);padding-top:14px}
+      .check{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+      .check input{margin-top:3px;accent-color:var(--bad)}
+      .tag{font:500 11px/1 var(--mono);padding:3px 6px;border-radius:4px;background:var(--bad-soft);color:var(--bad);margin-left:6px;white-space:nowrap}
+
+      /* Critères */
+      .crit{border:1px solid var(--line);border-left:4px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px;background:var(--surface)}
+      .crit[data-n="0"]{border-left-color:var(--bad)}.crit[data-n="1"]{border-left-color:var(--warn)}.crit[data-n="2"]{border-left-color:var(--good)}
+      .crit-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+      .crit h3{margin:0;font:600 16px/1.3 var(--display)}
+      .weight{display:flex;align-items:center;gap:6px;font:12px var(--mono);color:var(--muted)}
+      .weight input{width:56px;padding:4px 6px;font:13px var(--mono);text-align:right}
+      .pts{font:500 13px var(--mono);font-variant-numeric:tabular-nums}
+      .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+      .seg button{border:0;border-radius:0;padding:7px 12px;font:500 13px var(--mono);background:var(--surface)}
+      .seg button+button{border-left:1px solid var(--line)}
+      .seg button[aria-pressed="true"][data-v="0"]{background:var(--bad);color:var(--surface)}
+      .seg button[aria-pressed="true"][data-v="1"]{background:var(--warn);color:var(--surface)}
+      .seg button[aria-pressed="true"][data-v="2"]{background:var(--good);color:var(--surface)}
+      .suggest{font-size:13px;color:var(--muted)}
+      .suggest b{color:var(--ink);font-weight:600}
+      .findings{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+      .findings li{font-size:13px;background:var(--sunk);border-radius:6px;padding:7px 10px;display:grid;gap:3px}
+      .findings li .k{font:500 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+      .findings li.bad .k{color:var(--bad)}.findings li.warn .k{color:var(--warn)}.findings li.good .k{color:var(--good)}
+      .findings q{quotes:"« " " »";color:var(--ink);overflow-wrap:anywhere}
+      .manual{display:grid;gap:6px}
+      details summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:500}
+      .stats{display:flex;gap:16px;flex-wrap:wrap;font:12px var(--mono);color:var(--muted)}
+      .stats b{color:var(--ink);font-weight:500}
+      .toast{font-size:13px;color:var(--good);min-height:1em}
+      @media (prefers-reduced-motion:no-preference){.gauge circle.val{transition:stroke-dashoffset .5s ease}}
+    </style>
+
+    <div class="wrap">
+      <header>
+        <h1>Audit E-E-A-T WordPress</h1>
+        <p class="lede">Collez un article : la page repère les signaux de faux article d'expert, propose une note de 0 à 2 pour chacun des six critères et calcule le score pondéré sur 100. Les suggestions sont des pistes ; la note finale reste la vôtre.</p>
+      </header>
+
+      <div class="layout">
+        <section class="panel input-panel" aria-label="Article à auditer">
+          <div class="row">
+            <div class="field">
+              <label class="lbl" for="pubdate">Date de publication</label>
+              <input type="date" id="pubdate" value="2026-09-25" />
+            </div>
+            <span class="mode" id="mode"></span>
+          </div>
+          <div class="field">
+            <label class="lbl" for="article">Texte ou code HTML de l'article</label>
+            <textarea id="article" spellcheck="false"></textarea>
+          </div>
+          <p class="hint">Astuce : dans WordPress, copiez le contenu depuis l'éditeur de code (Ctrl+Maj+Alt+M). En HTML, la page voit les liens et les titres, donc l'analyse des sources et de la structure est plus fiable.</p>
+          <div class="row">
+            <button class="primary" id="run">Analyser l'article</button>
+            <button id="sample">Recharger l'exemple</button>
+            <button id="clear">Vider</button>
+          </div>
+          <div class="stats" id="stats"></div>
+        </section>
+
+        <div class="wrap" style="gap:16px">
+          <section class="panel" aria-label="Score">
+            <div class="score">
+              <div class="gauge" aria-hidden="true">
+                <svg viewBox="0 0 120 120">
+                  <circle cx="60" cy="60" r="52" fill="none" stroke="var(--sunk)" stroke-width="12" />
+                  <circle class="val" id="gaugeVal" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+                </svg>
+                <div class="num">
+                  <b id="scoreNum">0</b>
+                  <span>/ 100</span>
+                </div>
+              </div>
+              <div class="verdict">
+                <span class="pill" id="pill">
+                  <i></i>
+                  <span id="pillTxt"></span>
+                </span>
+                <p id="verdictTxt"></p>
+                <div class="formula" id="formula"></div>
+              </div>
+            </div>
+            <div class="elim">
+              <span class="lbl">Critères éliminatoires (un seul plafonne le score à 40)</span>
+              <label class="check">
+                <input type="checkbox" id="e1" />
+                <span>
+                  Date impossible : une étude citée ne pouvait pas exister à la date de publication
+                  <span class="tag" id="e1tag" hidden>suggéré</span>
+                </span>
+              </label>
+              <label class="check">
+                <input type="checkbox" id="e2" />
+                <span>Statistique introuvable chez la source citée, après vérification</span>
+              </label>
+              <label class="check">
+                <input type="checkbox" id="e3" />
+                <span>Faux témoignage : expérience contredite par le texte ou fonction inexistante dans l'outil</span>
+              </label>
+            </div>
+            <div class="row">
+              <button id="copy">Copier le rapport</button>
+              <span class="toast" id="toast" role="status"></span>
+            </div>
+          </section>
+
+          <div id="criteria" class="wrap" style="gap:12px"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const SAMPLE = ``;
+
+      const CRITERIA = [
+        {id:'exp', name:"Preuve d'expérience", w:25, q:"Puis-je reproduire le test avec les infos données ?"},
+        {id:'src', name:"Traçabilité des sources", w:20, q:"Puis-je vérifier chaque chiffre en moins de 2 minutes ?"},
+        {id:'time', name:"Cohérence temporelle", w:15, q:"Chaque étude citée pouvait-elle exister à cette date ?"},
+        {id:'struct', name:"Intégrité de la structure", w:15, q:"Chaque promesse du sommaire est-elle tenue ?"},
+        {id:'dens', name:"Densité et valeur ajoutée", w:15, q:"Supprimer 30 % du texte ferait-il perdre de l'information ?"},
+        {id:'auth', name:"Signaux auteur et site", w:10, q:"Ferais-je confiance à cet auteur pour un conseil payant ?"}
+      ];
+
+      const PLUGINS = ['yoast','rank math','seopress','all in one seo','aioseo','the seo framework','slim seo','squirrly','wp rocket','litespeed cache','w3 total cache','wp super cache','flyingpress','perfmatters','autoptimize','asset cleanup','wp fastest cache','nitropack','elementor','jetpack','wordfence','schema pro','wp schema','smush','shortpixel','imagify','ewww','redirection','woocommerce','gutenberg','kadence','generatepress','astra','query monitor','site kit','polylang','wpml','updraftplus','cloudflare','search console','pagespeed','lighthouse','screaming frog','semrush','ahrefs'];
+      const BRANDS = ['semrush','ahrefs','sparktoro','backlinko','moz','hubspot','similarweb','brightedge','gartner','statista','sistrix','seoclarity','authoritas','datos','google','bing','microsoft','openai','perplexity'];
+      const HEDGES = ['varie selon les études','ordre de grandeur',"n'est pas détaillée","ne sont pas détaillés",'selon certaines études','selon plusieurs études','selon des experts','on estime que','les études montrent','certaines sources','il semblerait','selon les sources','à titre indicatif'];
+      const CLICHES = ['dans le paysage actuel','il est crucial','il est essentiel','en constante évolution',"à l'ère de",'levier incontournable','game changer',"n'est plus une option",'plus que jamais','en somme','en définitive','pierre angulaire','au cœur de','dans un monde où','il convient de','force est de constater','optimiser votre visibilité','transforme la stratégie en acte','véritable atout','booster votre','boostez','incontournable','révolutionne','sans plus attendre','le saviez-vous','en conclusion','il est important de noter','jouer un rôle clé','clé du succès'];
+      const FIRST = /\b(j'ai (testé|utilisé|installé|essayé|renoncé|désactivé|activé|mesuré|constaté|migré|remplacé|configuré|abandonné)|nous avons (testé|utilisé|installé|mesuré|constaté|migré)|dans mon expérience|chez mes clients|sur mes sites|sur un de mes sites|mon client|j'utilise|je recommande|je n'utilise plus)/i;
+      const MONTHS = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+      const STUDY = /\b(étude|données|rapport|baromètre|enquête|tendances?|statistiques?|analyse|bilan|chiffres)\b/i;
+      const FULLYEAR = /(sur l'ensemble (des données|de l'année)|consolidé|bilan (annuel|de l'année)|sur toute l'année|année complète|sur l'année)/i;
+
+      const $ = s => document.querySelector(s);
+      const state = {notes:{}, auto:{}, weights:{}, auth:[false,false,false,false]};
+      CRITERIA.forEach(c => state.weights[c.id] = c.w);
+
+      function norm(s){return s.replace(/[’‘`]/g,"'").replace(/ /g,' ');}
+      function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+      function cut(s,n=150){s=s.trim();return s.length>n?s.slice(0,n-1)+'…':s;}
+      function words(s){return (s.match(/[\p{L}\p{N}'-]+/gu)||[]);}
+      function splitSentences(t){return t.split(/(?<=[.!?…])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>2);}
+
+      function parse(raw){
+        raw = norm(raw);
+        const isHtml = /<\/?(p|h[1-6]|a|ul|ol|li|div|strong|em|br)[\s>/]/i.test(raw);
+        const blocks = []; // {type:'h'|'p', text, links:[anchorTexts]}
+        if(isHtml){
+          const doc = new DOMParser().parseFromString(raw,'text/html');
+          doc.body.querySelectorAll('h1,h2,h3,h4,h5,h6,p,li,td,blockquote,figcaption').forEach(el=>{
+            if(el.closest('li') && el.tagName!=='LI' ) return;
+            const text = el.textContent.replace(/\s+/g,' ').trim(); if(!text) return;
+            const links = [...el.querySelectorAll('a[href]')].map(a=>a.textContent.trim()).filter(Boolean);
+            blocks.push({type:/^H\d$/.test(el.tagName)?'h':'p', text, links, hasLink:links.length>0});
+          });
+        } else {
+          const lines = raw.split(/\n/);
+          lines.forEach((l,i)=>{
+            const t=l.trim(); if(!t) return;
+            const md = /^#{1,6}\s+/.test(t);
+            const next = (lines.slice(i+1).find(x=>x.trim())||'');
+            const looksHeading = md || (words(t).length<=12 && !/[.!?:;,…]$/.test(t) && !/^[-*•\d]/.test(t) && next.length>0);
+            blocks.push({type:looksHeading?'h':'p', text:t.replace(/^#{1,6}\s+/,''), links:[], hasLink:/https?:\/\//.test(t)});
+          });
+        }
+        return {isHtml, blocks};
+      }
+
+      function analyze(){
+        const raw = $('#article').value;
+        const pub = new Date($('#pubdate').value || Date.now());
+        const pubY = pub.getFullYear(), pubM = pub.getMonth();
+        const {isHtml, blocks} = parse(raw);
+        const body = blocks.map(b=>b.text).join('\n');
+        const sents = [];
+        blocks.forEach(b=>{ if(b.type==='p') splitSentences(b.text).forEach(s=>sents.push({s, block:b})); });
+        const totalWords = words(body).length;
+        $('#mode').textContent = raw.trim()? (isHtml?'Mode HTML : liens et titres détectés':'Mode texte : titres devinés, liens non visibles') : '';
+        const R = {}; // id -> {suggest, reason, findings:[{lvl,k,text}]}
+
+        // 1. Expérience
+        {
+          const f=[]; let anon=0, named=0, metric=0;
+          sents.forEach(({s},i)=>{
+            if(!FIRST.test(s)) return;
+            const ctx = (s+' '+(sents[i+1]?.s||'')).toLowerCase();
+            const hasName = PLUGINS.some(p=>ctx.includes(p)) || /\b\d+\.\d+(\.\d+)?\b/.test(ctx);
+            const hasMetric = /(\d+[,.]?\d*\s?(s|ms|%|secondes?|clics|visites|positions?))|passé de|avant.*après/.test(ctx);
+            if(hasName){named++; if(hasMetric) metric++; f.push({lvl:hasMetric?'good':'warn',k:hasMetric?'Expérience nommée et chiffrée':'Outil nommé, sans mesure',text:s});}
+            else {anon++; f.push({lvl:'bad',k:'Première personne, outil jamais nommé',text:s});}
+          });
+          let n, why;
+          if(!anon && !named){n=1; why="Aucun témoignage à la première personne. Cherchez une capture, un cas client ou une donnée propre."}
+          else if(anon && !named){n=0; why=`${anon} témoignage(s) sans nom d'outil ni de site.`}
+          else if(metric && !anon){n=2; why="Outils nommés et résultats chiffrés."}
+          else {n=1; why=`${named} expérience(s) nommée(s), ${anon} anonyme(s), ${metric} chiffrée(s).`}
+          R.exp={suggest:n,reason:why,findings:f};
+        }
+
+        // 2. Sources
+        {
+          const f=[]; let stats=0, unlinked=0, hedges=0;
+          sents.forEach(({s,block})=>{
+            const low=s.toLowerCase();
+            const hasStat=/\d+[,.]?\d*\s?%|\b\d+\s?(fois|millions?|milliards?)\b|\bx\d+\b/i.test(s);
+            const brand=BRANDS.find(b=>new RegExp('\\b'+b+'\\b','i').test(low));
+            const linked = isHtml ? block.links.some(a=>s.includes(a)) : /https?:\/\//.test(s);
+            HEDGES.forEach(h=>{ if(low.includes(h)){hedges++; f.push({lvl:'bad',k:'Formule d\'auto-protection',text:s});} });
+            if(hasStat){
+              stats++;
+              if(!linked){unlinked++; f.push({lvl:brand?'warn':'bad',k:brand?`Chiffre attribué à ${brand[0].toUpperCase()+brand.slice(1)} sans lien`:'Chiffre sans source',text:s});}
+              else f.push({lvl:'good',k:'Chiffre avec lien',text:s});
+            }
+          });
+          let n, why;
+          if(!stats){n=1; why="Aucun chiffre détecté. Vérifiez les affirmations factuelles à la main."}
+          else if(unlinked===0 && !hedges){n=2; why=`${stats} chiffre(s), tous liés.`}
+          else if(unlinked/stats>0.5 || hedges>=2){n=0; why=`${unlinked} chiffre(s) sur ${stats} sans lien, ${hedges} formule(s) d'auto-protection.`}
+          else {n=1; why=`${unlinked} chiffre(s) sur ${stats} sans lien.`}
+          if(!isHtml && stats) why+=" En mode texte, les liens ne sont visibles que s'ils sont écrits en clair.";
+          R.src={suggest:n,reason:why,findings:dedupe(f)};
+        }
+
+        // 3. Temporel
+        {
+          const f=[]; let impossible=0, risky=0;
+          sents.forEach(({s})=>{
+            const low=s.toLowerCase();
+            (s.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
+              y=+y;
+              if(y>pubY){impossible++; f.push({lvl:'bad',k:`Année ${y} postérieure à la publication`,text:s}); return;}
+              if(y===pubY){
+                const m = MONTHS.findIndex(mo=>new RegExp(mo+'\\s+'+y).test(low));
+                if(m>pubM){impossible++; f.push({lvl:'bad',k:`${MONTHS[m]} ${y} est après la publication`,text:s});}
+                else if(FULLYEAR.test(s)){impossible++; f.push({lvl:'bad',k:`Données « annuelles » ${y} alors que l'année n'est pas finie`,text:s});}
+                else if(STUDY.test(s)){risky++; f.push({lvl:'warn',k:`Étude de l'année en cours (${y}) : vérifier qu'elle existe`,text:s});}
+              }
+            });
+          });
+          let n=impossible?0:(risky?1:2);
+          let why=impossible?`${impossible} date(s) impossible(s) au ${pub.toLocaleDateString('fr-FR')}.`:(risky?`${risky} référence(s) à des études de ${pubY} à vérifier.`:"Aucune date incohérente détectée.");
+          R.time={suggest:n,reason:why,findings:dedupe(f),impossible};
+        }
+
+        // 4. Structure
+        {
+          const f=[]; let thin=0;
+          const heads=[];
+          blocks.forEach((b,i)=>{ if(b.type==='h'){ let w=0; for(let j=i+1;j<blocks.length&&blocks[j].type!=='h';j++) w+=words(blocks[j].text).length; heads.push({t:b.text,w}); }});
+          heads.slice(1).forEach(h=>{ if(h.w<50 && !/conclusion/i.test(h.t)){thin++; f.push({lvl:'bad',k:`Section de ${h.w} mots`,text:h.t});} });
+          heads.forEach(h=>{ const m=h.t.match(/\b(\d+)\s+(outils|extensions|plugins|étapes|astuces|conseils|erreurs)\b/i); if(m) f.push({lvl:'warn',k:`Promet ${m[1]} ${m[2]} : compter les éléments`,text:h.t}); if(/\b(liste|top|comparatif)\b/i.test(h.t) && h.w<80) f.push({lvl:'bad',k:'Liste annoncée quasi vide',text:h.t}); });
+          const last=body.trim().slice(-1);
+          if(body.trim() && !/[.!?…»)\]]/.test(last)){f.push({lvl:'bad',k:'Fin de texte tronquée',text:body.trim().slice(-120)});}
+          const bad=f.filter(x=>x.lvl==='bad').length;
+          let n=bad>=2?0:(bad||f.length?1:2);
+          if(!heads.length){n=1;}
+          let why=heads.length?`${heads.length} titre(s) détecté(s), ${thin} section(s) de moins de 50 mots.`:"Aucun titre détecté. Collez le HTML pour une analyse fiable.";
+          R.struct={suggest:n,reason:why,findings:dedupe(f)};
+        }
+
+        // 5. Densité
+        {
+          const f=[]; let cl=0;
+          sents.forEach(({s})=>{ const low=s.toLowerCase(); const hit=CLICHES.find(c=>low.includes(c)); if(hit){cl++; f.push({lvl:'warn',k:`Formule creuse : ${hit}`,text:s});} });
+          const long=sents.map(x=>x.s).filter(s=>words(s).length>=8);
+          const sets=long.map(s=>new Set(words(s.toLowerCase()).filter(w=>w.length>3)));
+          let rep=0;
+          for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
+            const a=sets[i],b=sets[j]; let inter=0; a.forEach(w=>{if(b.has(w))inter++;});
+            const jac=inter/(a.size+b.size-inter||1);
+            if(jac>=0.5){rep++; f.push({lvl:'bad',k:`Phrase répétée (similarité ${Math.round(jac*100)} %)`,text:long[j]});}
+          }
+          const per1k = totalWords? (cl+rep*2)/totalWords*1000 : 0;
+          let n = per1k>=12?0:(per1k>=4?1:2);
+          if(!totalWords) n=1;
+          R.dens={suggest:n,reason:`${cl} formule(s) creuse(s), ${rep} répétition(s) pour ${totalWords} mots.`,findings:dedupe(f)};
+        }
+
+        // 6. Auteur : manuel
+        R.auth={suggest:authScore(),reason:"Non détectable dans le texte : cochez ce que vous avez vérifié sur le site.",findings:[],manual:true};
+
+        state.auto=R;
+        state.notes={};
+        $('#stats').innerHTML = raw.trim()? `<span><b>${totalWords}</b> mots</span><span><b>${sents.length}</b> phrases</span><span><b>${blocks.filter(b=>b.type==='h').length}</b> titres</span>` : '';
+        const e1=$('#e1'); e1.checked = R.time.impossible>0; $('#e1tag').hidden = !(R.time.impossible>0);
+        renderCriteria(); update();
+      }
+
+      function dedupe(f){const seen=new Set();return f.filter(x=>{const k=x.k+'|'+x.text;if(seen.has(k))return false;seen.add(k);return true;});}
+      function authScore(){const c=state.auth.filter(Boolean).length;return c>=4?2:(c>=2?1:0);}
+      function noteOf(id){return state.notes[id]!==undefined?state.notes[id]:state.auto[id]?.suggest??1;}
+
+      const AUTH_CHECKS=["Auteur nommé, avec photo ou bio","Profil vérifiable ailleurs (LinkedIn, conférences, autres publications)","Mentions légales et coordonnées sur le site","Ligne éditoriale cohérente sur le SEO ou WordPress"];
+
+      function renderCriteria(){
+        const box=$('#criteria'); box.innerHTML='';
+        CRITERIA.forEach((c,idx)=>{
+          const a=state.auto[c.id]||{findings:[],reason:''};
+          const el=document.createElement('article'); el.className='crit'; el.id='c-'+c.id;
+          const findings=a.findings.slice(0,8).map(x=>`<li class="${x.lvl}"><span class="k">${esc(x.k)}</span><q>${esc(cut(x.text))}</q></li>`).join('');
+          const more=a.findings.length>8?`<details><summary>${a.findings.length-8} autre(s) signal(aux)</summary><ul class="findings" style="margin-top:6px">${a.findings.slice(8).map(x=>`<li class="${x.lvl}"><span class="k">${esc(x.k)}</span><q>${esc(cut(x.text))}</q></li>`).join('')}</ul></details>`:'';
+          const manual = a.manual? `<div class="manual">${AUTH_CHECKS.map((t,i)=>`<label class="check"><input type="checkbox" id="auth${i}" ${state.auth[i]?'checked':''}><span>${t}</span></label>`).join('')}</div>`:'';
+          el.innerHTML=`
+            <div class="crit-head">
+              <h3>${idx+1}. ${c.name}</h3>
+              <div class="row" style="gap:12px">
+                <label class="weight" for="w-${c.id}">poids <input type="number" id="w-${c.id}" min="0" max="100" value="${state.weights[c.id]}"></label>
+                <span class="pts" id="pts-${c.id}"></span>
+              </div>
+            </div>
+            <div class="row" style="justify-content:space-between">
+              <div class="seg" role="group" aria-label="Note ${c.name}">
+                ${[0,1,2].map(v=>`<button type="button" data-v="${v}" aria-pressed="false">${v}</button>`).join('')}
+              </div>
+              <span class="suggest" id="sug-${c.id}"></span>
+            </div>
+            <p class="hint">${esc(a.reason)} <em>${c.q}</em></p>
+            ${manual}
+            ${findings?`<ul class="findings">${findings}</ul>`:''}${more}`;
+          box.appendChild(el);
+          el.querySelectorAll('.seg button').forEach(b=>b.addEventListener('click',()=>{state.notes[c.id]=+b.dataset.v;update();}));
+          el.querySelector('#w-'+c.id).addEventListener('input',e=>{state.weights[c.id]=Math.max(0,+e.target.value||0);update();});
+          if(a.manual) AUTH_CHECKS.forEach((_,i)=>el.querySelector('#auth'+i).addEventListener('change',e=>{state.auth[i]=e.target.checked;state.auto.auth.suggest=authScore();update();}));
+        });
+      }
+
+      function compute(){
+        let raw=0, totalW=0; const parts=[];
+        CRITERIA.forEach(c=>{const n=noteOf(c.id),w=state.weights[c.id];totalW+=w;const p=n/2*w;raw+=p;parts.push({c,n,w,p});});
+        const scaled = totalW? raw/totalW*100 : 0;
+        const elim=['#e1','#e2','#e3'].some(s=>$(s).checked);
+        const score = elim? Math.min(40,scaled) : scaled;
+        return {parts,raw,totalW,scaled,score,elim};
+      }
+      const fmt=x=>(Math.round(x*10)/10).toLocaleString('fr-FR');
+
+      function update(){
+        const r=compute();
+        r.parts.forEach(({c,n,p})=>{
+          const el=$('#c-'+c.id); if(!el) return;
+          el.dataset.n=n;
+          el.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===n?'true':'false'));
+          $('#pts-'+c.id).textContent=fmt(p)+' pts';
+          const s=state.auto[c.id]?.suggest;
+          $('#sug-'+c.id).innerHTML = s===undefined?'' : (state.notes[c.id]!==undefined && state.notes[c.id]!==s ? `Suggestion : <b>${s}</b> · corrigée à la main` : `Suggestion : <b>${s}</b>`);
+        });
+        const sc=Math.round(r.score*10)/10;
+        $('#scoreNum').textContent=fmt(sc);
+        const lvl = sc>=75?'good':(sc>=50?'warn':'bad');
+        const col = {good:'var(--good)',warn:'var(--warn)',bad:'var(--bad)'}[lvl];
+        const g=$('#gaugeVal'); g.style.stroke=col; g.style.strokeDashoffset=326.7*(1-sc/100);
+        $('#pill').className='pill '+lvl;
+        $('#pillTxt').textContent={good:'Fiable',warn:'À vérifier',bad:'Suspect'}[lvl];
+        $('#verdictTxt').textContent = {good:"À citer, à intégrer en veille ou en formation.",warn:"Utile pour repérer des pistes : recoupez chaque chiffre avant de l'utiliser.",bad:"Contenu de remplissage : scannez les mots-clés, n'en retenez rien."}[lvl] + (r.elim?" Plafond de 40 appliqué (critère éliminatoire).":"");
+        $('#formula').textContent = r.parts.map(({n,w})=>`${n}/2×${w}`).join(' + ') + ` = ${fmt(r.raw)}` + (r.totalW!==100?` → ramené sur 100 (poids total ${r.totalW}) = ${fmt(r.scaled)}`:'') + (r.elim?` → plafond 40`:'');
+      }
+
+      function report(){
+        const r=compute(); const d=new Date($('#pubdate').value).toLocaleDateString('fr-FR');
+        const first=($('#article').value.split('\n').find(l=>l.trim())||'').replace(/<[^>]+>/g,'').trim();
+        let t=`AUDIT E-E-A-T — ${cut(first,90)}\nPublié le ${d} · audité le ${new Date().toLocaleDateString('fr-FR')}\n\nScore : ${fmt(r.score)}/100 — ${$('#pillTxt').textContent}\n`;
+        if(r.elim) t+=`Critère éliminatoire : ${[['#e1','date impossible'],['#e2','statistique introuvable'],['#e3','faux témoignage']].filter(([s])=>$(s).checked).map(x=>x[1]).join(', ')} (plafond 40)\n`;
+        t+='\n';
+        r.parts.forEach(({c,n,w,p})=>{
+          const a=state.auto[c.id];
+          t+=`${c.name} — ${n}/2 × ${w} = ${fmt(p)} pts\n  ${a?.reason||''}\n`;
+          (a?.findings||[]).filter(x=>x.lvl!=='good').slice(0,3).forEach(x=>t+=`  • ${x.k} : « ${cut(x.text,110)} »\n`);
+        });
+        return t;
+      }
+
+      $('#copy').addEventListener('click',()=>{
+        const t=report(), toast=$('#toast');
+        const done=()=>{toast.textContent='Rapport copié';setTimeout(()=>toast.textContent='',2500);};
+        try{ navigator.clipboard.writeText(t).then(done).catch(fallback); }catch(e){fallback();}
+        function fallback(){const ta=$('#article');const keep=ta.value;ta.value=t;ta.select();toast.textContent='Rapport sélectionné dans le champ : copiez-le (Ctrl+C), puis rechargez l\'article';ta.dataset.keep=keep;}
+      });
+      ['#e1','#e2','#e3'].forEach(s=>$(s).addEventListener('change',()=>{ if(s==='#e1') $('#e1tag').hidden=true; update(); }));
+      $('#run').addEventListener('click',analyze);
+      $('#pubdate').addEventListener('change',analyze);
+      $('#sample').addEventListener('click',()=>{$('#article').value=SAMPLE;$('#pubdate').value='2026-09-25';analyze();});
+      $('#clear').addEventListener('click',()=>{$('#article').value='';analyze();$('#article').focus();});
+
+      $('#article').value=SAMPLE;
+      analyze();
+    </script>
+  </body>
+</html>
