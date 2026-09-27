@@ -538,6 +538,17 @@ def unquote(s):
     return re.sub(r'"[^"]{0,400}"', " … ", re.sub(r"“[^”]{0,400}”", " … ", re.sub(r"«[^»]{0,400}»", " … ", s)))
 
 
+RE_REPORTED = re.compile(r"\b(l'article|l'auteur|le texte|ce texte|ce contenu|le billet|la page|le guide|cet article)\s+"
+                         r"(analysé\s+|audité\s+|étudié\s+)?(affirme|prétend|avance|annonce|soutient|écrit|cite|assure|indique|"
+                         r"promet|explique|coche|reprend|mentionne|fournit)", re.I)
+RE_SELF_METRIC = re.compile(r"\d+[,.]?\d*\s?%\s+(du|de la|des)\s+(score|note|total|points|poids|barème|grille)\b", re.I)
+STOPWORDS = {"avec", "pour", "dans", "votre", "vos", "notre", "nos", "nous", "vous", "sont", "cette", "ces", "plus", "mais",
+             "elle", "elles", "ils", "leur", "leurs", "tout", "tous", "toute", "toutes", "être", "avoir", "fait", "faire",
+             "comme", "sans", "entre", "aussi", "même", "donc", "très", "peut", "ont", "était", "dont", "ceux", "celle",
+             "celui", "chaque", "quand", "alors", "encore", "déjà", "après", "avant", "cela", "ceci", "quel", "quelle",
+             "afin", "ainsi", "bien", "sous", "vers", "chez", "selon"}
+
+
 def is_question(s):
     return re.search(r"\?[\s»\"”')\]]*$", s) is not None
 
@@ -627,6 +638,12 @@ def analyze(post, rules):
             else:
                 hedges_bad += 1
                 F["src"].append(("alerte", "Formule d'auto-protection", s))
+        if RE_REPORTED.search(u) and RE_STAT.search(u):
+            F["src"].append(("info", "Chiffre rapporté d'un autre texte (non compté)", s))
+            continue
+        if RE_SELF_METRIC.search(u) and not RE_STAT.search(RE_SELF_METRIC.sub(" ", u)):
+            F["src"].append(("info", "Part du score de la méthode (non comptée)", s))
+            continue
         quoted_sourced = not RE_STAT.search(u) and RE_STAT.search(s) and is_brand_cited(u, rules)
         if not is_question(s) and (RE_STAT.search(u) or quoted_sourced):
             stats += 1
@@ -666,6 +683,10 @@ def analyze(post, rules):
                 F["time"].append(("info", f"Date suspecte dans {where} (non comptée, à vérifier)", s))
     for i, (s, _) in enumerate(sents):
         u = unq[i]
+        if RE_REPORTED.search(u):
+            if re.search(r"\b(19|20)\d{2}\b", u):
+                F["time"].append(("info", "Date rapportée d'un autre texte (non comptée)", s))
+            continue
         low = u.lower()
         for y in map(int, re.findall(r"\b((?:19|20)\d{2})\b", u)):
             if y > pub.year:
@@ -755,15 +776,16 @@ def analyze(post, rules):
             fill += 1
             F["dens"].append(("info", f"Connecteur banal (1/4 de poids) : {fh}", s))
     long_s = [s for s, _ in sents if len(words(s)) >= 8]
-    sets = [{w for w in words(s.lower()) if len(w) > 3} for s in long_s]
+    sets = [{w for w in words(s.lower()) if len(w) > 3 and w not in STOPWORDS} for s in long_s]
     rep = 0
     for i in range(len(sets)):
         for j in range(i + 1, len(sets)):
             inter = len(sets[i] & sets[j])
             union = len(sets[i] | sets[j]) or 1
-            if inter / union >= 0.5:
+            if inter / union >= 0.5 and inter >= 5:
                 rep += 1
-                F["dens"].append(("alerte", f"Phrase répétée ({round(inter / union * 100)} %)", long_s[j]))
+                other = long_s[i] if len(long_s[i]) <= 90 else long_s[i][:89] + "…"
+                F["dens"].append(("alerte", f"Phrase très proche d'une autre ({round(inter / union * 100)} % de mots en commun) : « {other} »", long_s[j]))
     per1k = (cl + fill * 0.25 + rep * 2) / n_words * 1000 if n_words else 0
     S["dens"] = 1 if not n_words else (0 if per1k >= 12 else (1 if per1k >= 4 else 2))
     why["dens"] = (f"{cl} formule(s) creuse(s), {fill} connecteur(s) banal(s), {rep} répétition(s) "

@@ -192,6 +192,8 @@ details.more summary{cursor:pointer;font-size:13px;color:var(--accent);font-weig
           <li><b>Citations, tableaux et questions.</b> Le texte entre guillemets, les citations (blockquote) et les cellules de tableau ne sont pas pris pour des affirmations de l'auteur : un article qui cite un mauvais exemple pour le dénoncer n'est pas pénalisé. Les chiffres et dates suspects qu'ils contiennent restent affichés « à vérifier », sans compter dans le score. Un faussaire pourrait en profiter en cachant ses chiffres dans un tableau : lisez ces signaux.</li>
           <li><b>Sections courtes.</b> Une section de moins de 50 mots n'est pas pénalisée si elle porte un tableau, une figure ou un bloc de code, ni si c'est la dernière section et qu'elle contient des liens (ressources, outil). Les sous-titres sont comptés avec leur section parente.</li>
           <li><b>Chiffres sans source.</b> Le critère 2 tombe à 0 s'il y a au moins deux chiffres sans source et au moins 2 pour 1 000 mots, ou une formule d'auto-protection avec un chiffre sans source. Deux chiffres perdus dans un long article le font descendre à 1. La page ne sait pas distinguer un chiffre qui décrit votre propre méthode (« 45 % du score ») d'une statistique : corrigez la note d'un clic dans ce cas.</li>
+          <li><b>Chiffres qui ne sont pas des statistiques.</b> Une part d'un score ou d'une note (« 45 % du score ») et un chiffre rapporté d'un autre texte (« l'article affirme que 68 %… ») ne sont pas comptés comme chiffres à sourcer. Ils restent affichés.</li>
+          <li><b>Phrases proches.</b> Deux phrases sont signalées si elles partagent au moins la moitié de leurs mots utiles (mots vides exclus) et au moins cinq mots. Les deux phrases sont affichées : à vous de juger s'il s'agit d'une vraie répétition.</li>
           <li><b>Fin de texte.</b> La dernière vraie phrase de texte courant doit se terminer par une ponctuation. Un libellé de lien final (« Télécharger le script »), un tableau ou une image ne comptent pas.</li>
           <li><b>Langue.</b> Les règles sont écrites pour des textes en français.</li>
         </ul>
@@ -263,6 +265,11 @@ function cut(s,n=150){s=s.trim();return s.length>n?s.slice(0,n-1)+'…':s;}
 function words(s){return (s.match(/[\p{L}\p{N}'-]+/gu)||[]);}
 function splitSentences(t){return t.split(/(?<=[.!?…])\s+|\n+/).map(s=>s.trim()).filter(s=>s.length>2);}
 // Retire les passages entre guillemets : une citation n'est pas une affirmation de l'auteur
+// Discours rapporté : l'auteur décrit ce qu'affirme l'article qu'il analyse
+const REPORTED = /\b(l'article|l'auteur|le texte|ce texte|ce contenu|le billet|la page|le guide|cet article)\s+(analysé\s+|audité\s+|étudié\s+)?(affirme|prétend|avance|annonce|soutient|écrit|cite|assure|indique|promet|explique|coche|reprend|mentionne|fournit)/i;
+// Part d'un score ou d'une note : calcul interne à la méthode, pas une statistique
+const SELF_METRIC = /\d+[,.]?\d*\s?%\s+(du|de la|des)\s+(score|note|total|points|poids|barème|grille)\b/i;
+const STOPWORDS = new Set(['avec','pour','dans','votre','vos','notre','nos','nous','vous','sont','cette','ces','plus','mais','elle','elles','ils','leur','leurs','tout','tous','toute','toutes','être','avoir','fait','faire','comme','sans','entre','aussi','même','donc','très','peut','ont','était','dont','ceux','celle','celui','chaque','quand','alors','encore','déjà','après','avant','cela','ceci','quel','quelle','leurs','afin','ainsi','bien','sous','vers','chez','selon']);
 function isQuestion(s){ return /\?[\s»"”')\]]*$/.test(s); }
 function unquote(s){ return s.replace(/«[^»]{0,400}»/g,' … ').replace(/“[^”]{0,400}”/g,' … ').replace(/"[^"]{0,400}"/g,' … '); }
 function reEsc(s){return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
@@ -496,6 +503,8 @@ function analyze(){
     });
     sents.forEach(({s,u,block},i)=>{
       const low=u.toLowerCase();
+      if(REPORTED.test(u) && STAT.test(u)){ f.push({lvl:'info',k:"Chiffre rapporté d'un autre texte (non compté)",text:s}); return; }
+      if(SELF_METRIC.test(u) && !STAT.test(u.replace(SELF_METRIC,' '))){ f.push({lvl:'info',k:'Part du score de la méthode (non comptée)',text:s}); return; }
       const quotedStatSourced = !STAT.test(u) && STAT.test(s) && !!isBrandCited(u);
       const hasStat = !isQuestion(s) && (STAT.test(u) || quotedStatSourced);
       const lq = bestLink(linksIn(s,block));
@@ -534,6 +543,7 @@ function analyze(){
       (u.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{ y=+y; if(y>pubY || (y===pubY && FULLYEAR.test(u))){ asideDates++; f.push({lvl:'info',k:`Date suspecte dans ${where} (non comptée, à vérifier)`,text:s}); } });
     });
     sents.forEach(({s,u})=>{
+      if(REPORTED.test(u)){ if(/\b(19|20)\d{2}\b/.test(u)) f.push({lvl:'info',k:"Date rapportée d'un autre texte (non comptée)",text:s}); return; }
       const low=u.toLowerCase();
       (u.match(/\b(19|20)\d{2}\b/g)||[]).forEach(y=>{
         y=+y;
@@ -599,12 +609,12 @@ function analyze(){
       if(fh){fill++; f.push({lvl:'info',k:`Connecteur banal (¼ de poids) : ${fh[0]}`,text:s});}
     });
     const long=sents.map(x=>x.s).filter(s=>words(s).length>=8);
-    const sets=long.map(s=>new Set(words(s.toLowerCase()).filter(w=>w.length>3)));
+    const sets=long.map(s=>new Set(words(s.toLowerCase()).filter(w=>w.length>3 && !STOPWORDS.has(w))));
     let rep=0;
     for(let i=0;i<sets.length;i++)for(let j=i+1;j<sets.length;j++){
       let inter=0; sets[i].forEach(w=>{if(sets[j].has(w))inter++;});
       const jac=inter/(sets[i].size+sets[j].size-inter||1);
-      if(jac>=0.5){rep++; f.push({lvl:'bad',k:`Phrase répétée (similarité ${Math.round(jac*100)} %)`,text:long[j]});}
+      if(jac>=0.5 && inter>=5){rep++; f.push({lvl:'bad',k:`Phrase très proche d'une autre (${Math.round(jac*100)} % de mots en commun) : « ${cut(long[i],90)} »`,text:long[j]});}
     }
     const per1k = totalWords? (cl + fill*0.25 + rep*2)/totalWords*1000 : 0;
     let n = per1k>=12?0:(per1k>=4?1:2);
